@@ -8,4 +8,6 @@
 #ifndef LZW_H_
 #define LZW_H_
 
+void LZWCompression(char *path);
+
 #endif /* LZW_H_ */

@@ -5,3 +5,7 @@
  *      Author: Guillaume
  */
 
+void LZWCompression(char *path) {
+
+}
+

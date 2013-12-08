@@ -9,32 +9,38 @@
 #include <string.h>
 #include "lzw.h"
 #include "huffman.h"
+#include "general.h"
 /*timeMethodLogging*/
 
 int main(int argc, char *argv[]) {
 
-	int i = 0;
 	int Comp = 0;
 	int UnComp = 0;
 
-	if (argc != 4) {
-		printf("Missing parameters");
+	if (argc != 3) {
+		printf("##### Missing parameters");
 		return 1;
 	} else {
-		for (i = 0; i < argc; i++) {
-			printf("Parameter %d = %s\n", i, argv[i]);
-		}
 
 		Comp = strcmp(argv[1], "-c");
 		UnComp = strcmp(argv[1], "-u");
 
 		if (Comp == 0) {
-			printf("Compression\n");
+			printf("##### Compression\n\n");
+
+			if (choiceCompression() == 1) {
+				/* Huffman */
+				huffmanCompression(argv[2]);
+			} else if (choiceCompression() == 2) {
+				/* Lempel-Ziv-Welch */
+				LZWCompression(argv[2]);
+
+			}
 		} else if (UnComp == 0) {
-			printf("UnCompression\n");
+			printf("##### UnCompression\n");
 
 		} else {
-			printf("Wrong parameter");
+			printf("!!!!! Wrong parameter");
 		}
 
 		return 0;

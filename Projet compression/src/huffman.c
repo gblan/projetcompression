@@ -8,10 +8,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-typedef struct node {
+typedef struct noeud {
 	unsigned char key;
-	struct node *left;
-	struct node *right;
+	struct noeud *gauche;
+	struct noeud *droite;
 } node;
 
 typedef struct table {
@@ -20,14 +20,19 @@ typedef struct table {
 	struct table *next;
 } table;
 
-void huffmanTree() {
-	node;
+/*void huffmanTree() {
+ node;
+ }*/
+
+void huffmanCompression(char *path) {
+
 }
 
 void openFileToCompress(char *path) {
 	FILE* fichier = NULL;
+	char* read = NULL;
+
 	fichier = fopen(path, "r");
-	char* read;
 
 	if (fichier != NULL) {
 		while (fgets(read, 1000, fichier) != NULL) {
@@ -40,16 +45,16 @@ void openFileToCompress(char *path) {
 
 void tableAppearance(char *str, int *tabApp, char *tabChar) {
 	/*création de la table d'apparence a partir du fichier d'entrée*/
-	int i = 0;
-	int j = 0;
-	int strLength = strlen(str);
-	char c;
-	while (c != '\0') {
-		c = str[i];
-		/*if(tabChar[0][j]==c){
-		 } else {
-		 }*/
-	}
+	/*int i = 0;
+	 int j = 0;
+	 int strLength = strlen(str);
+	 char c;
+	 while (c != '\0') {
+	 c = str[i];
+	 if(tabChar[0][j]==c){
+	 } else {
+	 }
+	 }*/
 }
 
 void huffmanTableSort(int *tabApp, char *tabChar) {
@@ -58,5 +63,5 @@ void huffmanTableSort(int *tabApp, char *tabChar) {
 }
 
 void printTabAppearance(int **tab, int a) {
-	/* affichage de la table de correspondance caractère/nombre*/
+	/* affichage de la table de correspondance caractere/nombre*/
 }
