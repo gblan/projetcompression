@@ -13,7 +13,7 @@
 /*timeMethodLogging*/
 
 int main(int argc, char *argv[]) {
-
+/*
 	int Comp = 0;
 	int UnComp = 0;
 
@@ -29,10 +29,8 @@ int main(int argc, char *argv[]) {
 			printf("##### Compression\n\n");
 
 			if (choiceCompression() == 1) {
-				/* Huffman */
 				huffmanCompression(argv[2]);
 			} else if (choiceCompression() == 2) {
-				/* Lempel-Ziv-Welch */
 				LZWCompression(argv[2]);
 
 			}
@@ -44,5 +42,12 @@ int main(int argc, char *argv[]) {
 		}
 
 		return 0;
-	}
+	}*/
+	FILE* fichier = NULL;
+	FILE** file = &fichier;
+	fileOpen("test.txt", file);
+
+	readFile(file);
+	fileClose(file);
+	return 0;
 }

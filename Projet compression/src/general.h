@@ -10,5 +10,8 @@
 
 int choiceCompression();
 int checkExtention(char* fileName);
+void fileOpen(char* filename, FILE** fichier);
+void fileClose(FILE** fichier);
+char readFile(FILE** file);
 
 #endif /* PRINT_H_ */
