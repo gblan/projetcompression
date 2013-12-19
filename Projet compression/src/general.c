@@ -17,7 +17,7 @@ int choiceCompression() {
 
 int checkExtention(char* fileName) {
 	int result = 0;
-
+	int test;
 	return result;
 }
 
