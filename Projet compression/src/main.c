@@ -45,9 +45,12 @@ int main(int argc, char *argv[]) {
 	}*/
 	FILE* fichier = NULL;
 	FILE** file = &fichier;
+	int* intTab;
+	char* charTab;
 	fileOpen("test.txt", file);
+	copyFile(file, *intTab, *charTab);
+	/*readFile(file);*/
 
-	readFile(file);
 	fileClose(file);
 	return 0;
 }

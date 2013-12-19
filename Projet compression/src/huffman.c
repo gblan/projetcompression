@@ -43,7 +43,7 @@ void openFileToCompress(char *path) {
 
 }
 
-void tableAppearance(char *str, int *tabApp, char *tabChar) {
+/*void tableAppearance(char *str, int *tabApp, char *tabChar) {*/
 	/*création de la table d'apparence a partir du fichier d'entrée*/
 	/*int i = 0;
 	 int j = 0;
@@ -55,7 +55,12 @@ void tableAppearance(char *str, int *tabApp, char *tabChar) {
 	 } else {
 	 }
 	 }*/
+
+
+void tableAppearance(int **tabInt, char **tabChar, FILE** file){
+
 }
+
 
 void huffmanTableSort(int *tabApp, char *tabChar) {
 	/*tri de la table de probabilité*/
