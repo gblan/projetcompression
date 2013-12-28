@@ -48,8 +48,8 @@ int main(int argc, char *argv[]) {
 	int* intTab;
 	char* charTab;
 	fileOpen("test.txt", file);
-	copyFile(file, *intTab, *charTab);
-	/*readFile(file);*/
+	/*copyFile(file, *intTab, *charTab);*/
+	readFilechar(file);
 
 	fileClose(file);
 	return 0;

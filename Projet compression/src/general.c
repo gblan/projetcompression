@@ -49,6 +49,14 @@ void readFile(FILE** file) {
 	printf("\n");
 }
 
+void readFilechar(FILE** file) {
+	int c;
+	while ((c = fgetc(*file)) != EOF) {
+		printf("%c", (char) c);
+	}
+	printf("\n");
+}
+
 int isInTab(char c, char* charTab) {
 	int i = 0;
 
@@ -84,5 +92,4 @@ void copyFile(FILE** file, int *intTab, char *charTab) {
 	}
 	printf("\n");
 }
-
 
