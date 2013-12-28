@@ -73,7 +73,7 @@ int isInTab(char c, char* charTab) {
 
 void copyFile(FILE** file, int *intTab, char *charTab) {
 	char c;
-	int i;
+	int positionChar;
 	int tailleTab;
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
 	while ((c = fgetc(*file)) != EOF) {
@@ -85,10 +85,10 @@ void copyFile(FILE** file, int *intTab, char *charTab) {
 			intTab[tailleTab] = 1;
 			charTab[tailleTab] = c;
 		} else {
-			i = isInTab(c, charTab);
-			intTab[i]++;
+			positionChar = isInTab(c, charTab);
+			intTab[positionChar]++;
 		}
-
+		printf("ok\n");
 	}
 	printf("\n");
 }

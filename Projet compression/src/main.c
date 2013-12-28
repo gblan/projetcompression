@@ -45,12 +45,19 @@ int main(int argc, char *argv[]) {
 	}*/
 	FILE* fichier = NULL;
 	FILE** file = &fichier;
-	int* intTab;
-	char* charTab;
+	int intTab[100];
+	char* charTab[100];
 	fileOpen("test.txt", file);
-	/*copyFile(file, *intTab, *charTab);*/
-	readFilechar(file);
 
+/*	charTab = "TotoTataTitiTutu";
+	printf("T : %d\n",isInTab('T',charTab));
+	printf("a : %d\n",isInTab('a',charTab));
+	printf("t : %d\n",isInTab('t',charTab));
+	printf("b : %d\n",isInTab('b',charTab));
+	printf("i : %d\n",isInTab('i',charTab));
+	printf("p : %d\n",isInTab('p',charTab));*/
+
+	copyFile(file, intTab, *charTab);
 	fileClose(file);
 	return 0;
 }
