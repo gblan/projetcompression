@@ -29,11 +29,6 @@ int main(int argc, char *argv[]) {
 	 if (Comp == 0) {
 	 printf("##### Compression\n\n");
 
-	 if (choiceCompression() == 1) {
-	 huffmanCompression(argv[2]);
-	 } else if (choiceCompression() == 2) {
-	 LZWCompression(argv[2]);
-
 	 }
 	 } else if (UnComp == 0) {
 	 printf("##### UnCompression\n");
@@ -51,6 +46,7 @@ int main(int argc, char *argv[]) {
 	float* tabProba;
 	intTab = calloc(1, sizeof(int));
 	charTab = calloc(1, sizeof(char));
+	tabProba = calloc(1, sizeof(float));
 
 	fileOpen("test.txt", file);
 	huffman(file, intTab, charTab, tabProba);

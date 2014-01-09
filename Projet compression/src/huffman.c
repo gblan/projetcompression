@@ -9,20 +9,10 @@
 #include<stdlib.h>
 
 typedef struct noeud {
-	unsigned char key;
-	struct noeud *gauche;
-	struct noeud *droite;
+	unsigned int code;
+	struct noeud *gauche_0;
+	struct noeud *droite_1;
 } node;
-
-typedef struct table {
-	unsigned char character;
-	unsigned int nbApp;
-	struct table *next;
-} table;
-
-/*void huffmanTree() {
- node;
- }*/
 
 void openFileToCompress(char *path) {
 	FILE* fichier = NULL;
@@ -63,7 +53,7 @@ int sumTab(int* tabInt, int tailleTab) {
 	return result;
 }
 
-void creatTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab) {
+void createTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab) {
 
 	int i = 0;
 
@@ -72,6 +62,18 @@ void creatTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab) {
 		/* Test*/
 		printf("tabProba[%d] = %f , tabInt[%d] = %d \n",i,tabProba[i],i,tabInt[i]);
 	}
+}
+
+void createHuffmanTree(){
+	struct noeud racine;
+	struct noeud* test = &racine;
+	racine.code=0;
+
+	racine.droite_1 = test;
+	test->code=0;
+	struct noeud* test2;
+	test->droite_1 = test2;
+
 }
 
 void huffman(FILE** file, int *intTab, char *charTab, float* tabProba) {
@@ -104,13 +106,19 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba) {
 		printf(" %c    %d\n", charTab[i], intTab[i]);
 	}
 
-	/* Affichage tableau de probabilite */
-	nbChar = sumTab(intTab, tailleTab);
 
-	creatTabProba(tabProba, intTab, tailleTab, nbChar);
+	/* Creation du tableau de probabilitees */
+	nbChar = sumTab(intTab, tailleTab);
+	tabProba = realloc(tabProba, sizeof(float) * tailleTab + 1);
+	createTabProba(tabProba, intTab, tailleTab, nbChar);
+
+
 
 	free(intTab);
 	intTab = NULL;
 	free(charTab);
 	charTab = NULL;
+	free(tabProba);
+	tabProba = NULL;
 }
+
