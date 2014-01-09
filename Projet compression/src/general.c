@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #define TAILLE_MAX 1000
 
 int choiceCompression() {
@@ -57,13 +58,13 @@ void readFilechar(FILE** file) {
 	printf("\n");
 }
 
+/* si le caractere est dans le tableau, alors on retourne sa position
+ * sinon on retourne -1 */
 int isInTab(char c, char* charTab) {
 	int i = 0;
 
 	while (charTab[i] != '\0') {
-		if (charTab[i] == c)
-
-		{
+		if (charTab[i] == c) {
 			return i;
 		}
 		i++;
@@ -73,23 +74,36 @@ int isInTab(char c, char* charTab) {
 
 void copyFile(FILE** file, int *intTab, char *charTab) {
 	char c;
-	int positionChar;
-	int tailleTab;
+	int i = 0;
+	int positionChar = 0;
+	int tailleTab = 0;
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
 	while ((c = fgetc(*file)) != EOF) {
 		printf("%c", c);
 
 		if (isInTab(c, charTab) == -1) {
-			/* realloc */
+			intTab = realloc(intTab,sizeof(int)*tailleTab+1);
+			charTab = realloc(charTab,sizeof(char)*tailleTab+1);
 
 			intTab[tailleTab] = 1;
 			charTab[tailleTab] = c;
+			tailleTab++;
+
+
 		} else {
 			positionChar = isInTab(c, charTab);
 			intTab[positionChar]++;
 		}
-		printf("ok\n");
 	}
 	printf("\n");
+
+	for(i=0;i<tailleTab;i++) {
+	 printf(" %c    %d\n", charTab[i], intTab[i]);
+	}
+
+	free(intTab);
+	intTab = NULL;
+	free(charTab);
+	charTab = NULL;
 }
 

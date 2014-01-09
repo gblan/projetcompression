@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "lzw.h"
 #include "huffman.h"
 #include "general.h"
@@ -45,19 +46,14 @@ int main(int argc, char *argv[]) {
 	}*/
 	FILE* fichier = NULL;
 	FILE** file = &fichier;
-	int intTab[100];
-	char* charTab[100];
+	int* intTab;
+	char* charTab;
+	intTab = calloc(1,sizeof(int));
+	charTab = calloc(1,sizeof(char));
+
 	fileOpen("test.txt", file);
+	copyFile(file, intTab, charTab);
 
-/*	charTab = "TotoTataTitiTutu";
-	printf("T : %d\n",isInTab('T',charTab));
-	printf("a : %d\n",isInTab('a',charTab));
-	printf("t : %d\n",isInTab('t',charTab));
-	printf("b : %d\n",isInTab('b',charTab));
-	printf("i : %d\n",isInTab('i',charTab));
-	printf("p : %d\n",isInTab('p',charTab));*/
-
-	copyFile(file, intTab, *charTab);
 	fileClose(file);
 	return 0;
 }
