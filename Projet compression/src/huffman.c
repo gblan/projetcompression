@@ -24,10 +24,6 @@ typedef struct table {
  node;
  }*/
 
-void huffmanCompression(char *path) {
-
-}
-
 void openFileToCompress(char *path) {
 	FILE* fichier = NULL;
 	char* read = NULL;

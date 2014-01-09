@@ -8,7 +8,6 @@
 #ifndef GENERAL_H_
 #define GENERAL_H_
 
-int choiceCompression();
 int checkExtention(char* fileName);
 void fileOpen(char* filename, FILE** fichier);
 void fileClose(FILE** fichier);

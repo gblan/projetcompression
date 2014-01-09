@@ -8,7 +8,6 @@
 #ifndef HUFFMAN_H_
 #define HUFFMAN_H_
 
-void huffmanCompression(char *path);
 void openFileToCompress(char *path);
 void huffman(FILE** file, int *intTab, char *charTab, float* tabProba);
 int isInTab(char c, char* charTab);

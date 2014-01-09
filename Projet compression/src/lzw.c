@@ -9,26 +9,5 @@
 #include <stdlib.h>
 
 void LZWCompression(char *path) {
-
-}
-
-void isEndFile() {
-
-}
-
-char* concatenation(char* subStr1, char* subStr2) {
-	char* str = NULL;
-	return str;
-}
-
-void isInDico(char** dico) {
-
-}
-
-void addDico(char** dico) {
-
-}
-
-void WriteAdress(char** dico) {
-
+	printf("Chemin : %s\n", path);
 }
