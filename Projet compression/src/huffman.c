@@ -43,30 +43,78 @@ void openFileToCompress(char *path) {
 
 }
 
-/*void tableAppearance(char *str, int *tabApp, char *tabChar) {*/
-	/*création de la table d'apparence a partir du fichier d'entrée*/
-	/*int i = 0;
-	 int j = 0;
-	 int strLength = strlen(str);
-	 char c;
-	 while (c != '\0') {
-	 c = str[i];
-	 if(tabChar[0][j]==c){
-	 } else {
-	 }
-	 }*/
+/* si le caractere est dans le tableau, alors on retourne sa position
+ * sinon on retourne -1 */
+int isInTab(char c, char* charTab) {
+	int i = 0;
 
-
-void tableAppearance(int **tabInt, char **tabChar, FILE** file){
-
+	while (charTab[i] != '\0') {
+		if (charTab[i] == c) {
+			return i;
+		}
+		i++;
+	}
+	return -1;
 }
 
+int sumTab(int* tabInt, int tailleTab) {
 
-void huffmanTableSort(int *tabApp, char *tabChar) {
-	/*tri de la table de probabilité*/
+	int i = 0, result = 0;
 
+	for (i = 0; i < tailleTab; i++) {
+		result += tabInt[i];
+	}
+	return result;
 }
 
-void printTabAppearance(int **tab, int a) {
-	/* affichage de la table de correspondance caractere/nombre*/
+void creatTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab) {
+
+	int i = 0;
+
+	for (i = 0; i < tailleTab; i++) {
+		tabProba[i] = ((float) tabInt[i] / (float) sumTab);
+		/* Test*/
+		printf("tabProba[%d] = %f , tabInt[%d] = %d \n",i,tabProba[i],i,tabInt[i]);
+	}
+}
+
+void huffman(FILE** file, int *intTab, char *charTab, float* tabProba) {
+	char c;
+	int i = 0;
+	int positionChar = 0;
+	int tailleTab = 0;
+	int nbChar;
+	/* Vérifier la taille du fichier avant de l'ouvrir*/
+	while ((c = fgetc(*file)) != EOF) {
+		printf("%c", c);
+
+		if (isInTab(c, charTab) == -1) {
+			intTab = realloc(intTab, sizeof(int) * tailleTab + 1);
+			charTab = realloc(charTab, sizeof(char) * tailleTab + 1);
+
+			intTab[tailleTab] = 1;
+			charTab[tailleTab] = c;
+			tailleTab++;
+
+		} else {
+			positionChar = isInTab(c, charTab);
+			intTab[positionChar]++;
+		}
+	}
+	printf("\n");
+
+	/* Affichage tableau d'apparition*/
+	for (i = 0; i < tailleTab; i++) {
+		printf(" %c    %d\n", charTab[i], intTab[i]);
+	}
+
+	/* Affichage tableau de probabilite */
+	nbChar = sumTab(intTab, tailleTab);
+
+	creatTabProba(tabProba, intTab, tailleTab, nbChar);
+
+	free(intTab);
+	intTab = NULL;
+	free(charTab);
+	charTab = NULL;
 }

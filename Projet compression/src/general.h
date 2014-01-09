@@ -14,7 +14,5 @@ void fileOpen(char* filename, FILE** fichier);
 void fileClose(FILE** fichier);
 char readFile(FILE** file);
 void readFilechar(FILE** file);
-void copyFile(FILE** file, int *intTab, char *charTab);
-int isInTab(char c, char* charTab);
 
 #endif /* PRINT_H_ */

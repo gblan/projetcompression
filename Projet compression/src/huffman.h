@@ -10,8 +10,9 @@
 
 void huffmanCompression(char *path);
 void openFileToCompress(char *path);
-void tableAppearance(char *str, int **tabApp);
-void huffmanTableSort(int *tabApp, char *tabChar);
-void printTabAppearance(int **tab, int a);
+void huffman(FILE** file, int *intTab, char *charTab, float* tabProba);
+int isInTab(char c, char* charTab);
+int sumTab(int* tabInt, int tailleTab);
+void creatTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab);
 
 #endif /* HUFFMAN_H_ */

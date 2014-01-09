@@ -14,47 +14,46 @@
 /*timeMethodLogging*/
 
 int main(int argc, char *argv[]) {
-/*
-	int Comp = 0;
-	int UnComp = 0;
+	/*
+	 int Comp = 0;
+	 int UnComp = 0;
 
-	if (argc != 3) {
-		printf("##### Missing parameters");
-		return 1;
-	} else {
+	 if (argc != 3) {
+	 printf("##### Missing parameters");
+	 return 1;
+	 } else {
 
-		Comp = strcmp(argv[1], "-c");
-		UnComp = strcmp(argv[1], "-u");
+	 Comp = strcmp(argv[1], "-c");
+	 UnComp = strcmp(argv[1], "-u");
 
-		if (Comp == 0) {
-			printf("##### Compression\n\n");
+	 if (Comp == 0) {
+	 printf("##### Compression\n\n");
 
-			if (choiceCompression() == 1) {
-				huffmanCompression(argv[2]);
-			} else if (choiceCompression() == 2) {
-				LZWCompression(argv[2]);
+	 if (choiceCompression() == 1) {
+	 huffmanCompression(argv[2]);
+	 } else if (choiceCompression() == 2) {
+	 LZWCompression(argv[2]);
 
-			}
-		} else if (UnComp == 0) {
-			printf("##### UnCompression\n");
+	 }
+	 } else if (UnComp == 0) {
+	 printf("##### UnCompression\n");
 
-		} else {
-			printf("!!!!! Wrong parameter");
-		}
+	 } else {
+	 printf("!!!!! Wrong parameter");
+	 }
 
-		return 0;
-	}*/
+	 return 0;
+	 }*/
 	FILE* fichier = NULL;
 	FILE** file = &fichier;
 	int* intTab;
 	char* charTab;
 	float* tabProba;
-	intTab = calloc(1,sizeof(int));
-	charTab = calloc(1,sizeof(char));
+	intTab = calloc(1, sizeof(int));
+	charTab = calloc(1, sizeof(char));
 
 	fileOpen("test.txt", file);
-	copyFile(file, intTab, charTab);
-
+	huffman(file, intTab, charTab, tabProba);
 
 	fileClose(file);
 	return 0;
