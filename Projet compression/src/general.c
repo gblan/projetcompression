@@ -82,13 +82,12 @@ void copyFile(FILE** file, int *intTab, char *charTab) {
 		printf("%c", c);
 
 		if (isInTab(c, charTab) == -1) {
-			intTab = realloc(intTab,sizeof(int)*tailleTab+1);
-			charTab = realloc(charTab,sizeof(char)*tailleTab+1);
+			intTab = realloc(intTab, sizeof(int) * tailleTab + 1);
+			charTab = realloc(charTab, sizeof(char) * tailleTab + 1);
 
 			intTab[tailleTab] = 1;
 			charTab[tailleTab] = c;
 			tailleTab++;
-
 
 		} else {
 			positionChar = isInTab(c, charTab);
@@ -97,8 +96,8 @@ void copyFile(FILE** file, int *intTab, char *charTab) {
 	}
 	printf("\n");
 
-	for(i=0;i<tailleTab;i++) {
-	 printf(" %c    %d\n", charTab[i], intTab[i]);
+	for (i = 0; i < tailleTab; i++) {
+		printf(" %c    %d\n", charTab[i], intTab[i]);
 	}
 
 	free(intTab);
@@ -107,3 +106,21 @@ void copyFile(FILE** file, int *intTab, char *charTab) {
 	charTab = NULL;
 }
 
+int sumTab(int* tabInt, int tailleTab) {
+
+	int i = 0, result = 0;
+
+	for (i = 0; i < tailleTab; i++) {
+		result += tabInt[i];
+	}
+	return result;
+}
+
+void tabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab) {
+
+	int i = 0;
+
+	for (i = 0; i < tailleTab; i++) {
+		tabProba[i] = (float) tabInt[i] / sumTab;
+	}
+}

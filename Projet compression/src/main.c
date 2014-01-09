@@ -48,11 +48,13 @@ int main(int argc, char *argv[]) {
 	FILE** file = &fichier;
 	int* intTab;
 	char* charTab;
+	float* tabProba;
 	intTab = calloc(1,sizeof(int));
 	charTab = calloc(1,sizeof(char));
 
 	fileOpen("test.txt", file);
 	copyFile(file, intTab, charTab);
+
 
 	fileClose(file);
 	return 0;
