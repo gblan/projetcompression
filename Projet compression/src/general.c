@@ -3,14 +3,22 @@
 #include <stdlib.h>
 #define TAILLE_MAX 1000
 
-int checkExtention(char* fileName) {
-	int result = 0;
-	printf("filename : %s\n", fileName);
+char* checkFileName(char* fileName, int longueurChaine) {
+	char* result = NULL;
+	int i;
+
+	for (i = 0; i < longueurChaine; i++) {
+		if (fileName[i] != '.') {
+			result[i] = fileName[i];
+		} else {
+			return result;
+		}
+	}
 	return result;
 }
 
-int fileOpen(char* filename, FILE** fichier) {
-	*fichier = fopen(filename, "r+");
+int openFile(char* fileName, FILE** fichier) {
+	*fichier = fopen(fileName, "r+");
 
 	if (*fichier != NULL) {
 		printf("Open OK\n");
@@ -22,13 +30,29 @@ int fileOpen(char* filename, FILE** fichier) {
 	}
 }
 
-void fileClose(FILE** fichier) {
+void closeFile(FILE** fichier) {
 	if (fichier != NULL) {
 		fclose(*fichier);
 		printf("Close OK\n");
 	} else {
 		printf("Close KO\n");
 	}
+}
+
+FILE* createFile(char* fileName) {
+	FILE* tmp = NULL;
+
+	if (fopen(fileName, "r") == NULL) {
+		tmp = fopen(fileName, "a");
+		return tmp;
+	} else {
+		printf("Le fichier existe deja");
+		return tmp;
+	}
+}
+
+void writeFile(FILE** fichier, char* stringToWrite) {
+	fprintf(*fichier, stringToWrite);
 }
 
 void readFile(FILE** file) {

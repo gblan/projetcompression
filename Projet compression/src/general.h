@@ -8,9 +8,11 @@
 #ifndef GENERAL_H_
 #define GENERAL_H_
 
-int checkExtention(char* fileName);
-int fileOpen(char* filename, FILE** fichier);
-void fileClose(FILE** fichier);
+char* checkFileName(char* fileName, int longueurChaine);
+int openFile(char* filename, FILE** fichier);
+void closeFile(FILE** fichier);
+FILE* createFile(char* fileName);
+void writeFile(FILE** fichier, char* stringToWrite);
 char readFile(FILE** file);
 void readFilechar(FILE** file);
 

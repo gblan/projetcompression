@@ -26,7 +26,6 @@ void openFileToCompress(char *path) {
 		}
 		fclose(fichier);
 	}
-
 }
 
 /* si le caractere est dans le tableau, alors on retourne sa position
@@ -111,6 +110,13 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba) {
 	nbChar = sumTab(intTab, tailleTab);
 	tabProba = realloc(tabProba, sizeof(float) * tailleTab + 1);
 	createTabProba(tabProba, intTab, tailleTab, nbChar);
+
+	free(intTab);
+	intTab = NULL;
+	free(charTab);
+	charTab = NULL;
+	free(tabProba);
+	tabProba = NULL;
 
 }
 
