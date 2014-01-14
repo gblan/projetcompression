@@ -5,18 +5,20 @@
 
 int checkExtention(char* fileName) {
 	int result = 0;
-	printf("filename : %s\n",fileName);
+	printf("filename : %s\n", fileName);
 	return result;
 }
 
-void fileOpen(char* filename, FILE** fichier) {
+int fileOpen(char* filename, FILE** fichier) {
 	*fichier = fopen(filename, "r+");
 
 	if (*fichier != NULL) {
 		printf("Open OK\n");
+		return 0;
 
 	} else {
 		printf("Open KO\n");
+		return -1;
 	}
 }
 

@@ -9,7 +9,7 @@
 #define GENERAL_H_
 
 int checkExtention(char* fileName);
-void fileOpen(char* filename, FILE** fichier);
+int fileOpen(char* filename, FILE** fichier);
 void fileClose(FILE** fichier);
 char readFile(FILE** file);
 void readFilechar(FILE** file);
