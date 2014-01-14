@@ -7,6 +7,7 @@
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
+#include"general.h"
 
 typedef struct noeud {
 	unsigned int code;
@@ -71,17 +72,20 @@ void createHuffmanTree() {
 
 	racine.droite_1 = test;
 	test->code = 0;
-	struct noeud* test2;
+	struct noeud* test2= NULL;
 	test->droite_1 = test2;
 
 }
 
-void huffman(FILE** file, int *intTab, char *charTab, float* tabProba) {
+void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* archiveName) {
 	char c;
 	int i = 0;
 	int positionChar = 0;
 	int tailleTab = 0;
 	int nbChar;
+	FILE* archive;
+	FILE** ptArchive = &archive;
+
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
 	while ((c = fgetc(*file)) != EOF) {
 		printf("%c", c);
@@ -111,12 +115,18 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba) {
 	tabProba = realloc(tabProba, sizeof(float) * tailleTab + 1);
 	createTabProba(tabProba, intTab, tailleTab, nbChar);
 
+	/* Creation de l'archive */
+	/*archive = createFile(archiveName);
+	writeFile(ptArchive,"CONTENU BINAIRE");
+	closeFile(ptArchive);*/
+
 	free(intTab);
 	intTab = NULL;
 	free(charTab);
 	charTab = NULL;
 	free(tabProba);
 	tabProba = NULL;
+
 
 }
 

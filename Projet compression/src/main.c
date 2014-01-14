@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
 	FILE** file = &fichier;
 	int* intTab;
 	char* charTab;
+	char* archiveName;
 	float* tabProba;
 
 	if (argc != 3) {
@@ -40,7 +41,9 @@ int main(int argc, char *argv[]) {
 				return -1;
 
 			}
-			huffman(file, intTab, charTab, tabProba);
+			/* Récupérer le nom du fichier et le stocker dans archiveName*/
+			/* archiveName = checkFileName(argv[2], strlen(argv[2]));*/
+			huffman(file, intTab, charTab, tabProba, archiveName);
 			closeFile(file);
 
 		} else if (UnComp == 0) {

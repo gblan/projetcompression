@@ -9,7 +9,7 @@
 #define HUFFMAN_H_
 
 void openFileToCompress(char *path);
-void huffman(FILE** file, int *intTab, char *charTab, float* tabProba);
+void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* archiveName);
 int isInTab(char c, char* charTab);
 int sumTab(int* tabInt, int tailleTab);
 void createTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab);
