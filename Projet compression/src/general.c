@@ -7,7 +7,6 @@ char* checkFileName(char* fileName, int longueurChaine) {
 	char* result = NULL;
 	int i;
 
-
 	for (i = 0; i < longueurChaine; i++) {
 		if (fileName[i] != '.') {
 			result[i] = fileName[i];
