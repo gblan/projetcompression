@@ -13,13 +13,18 @@ typedef struct elementListe {
 	int frequence;
 	char caractere;
 	struct elementListe* suivant;
+	struct noeud* noeudCourant;
 } elementListe;
 
-typedef struct noeud {
+typedef struct arbre {
+	struct noeud *racine;
+} arbre;
 
+typedef struct noeud {
+	char caractere;
 	struct noeud *gauche_0;
 	struct noeud *droite_1;
-} node;
+} noeud;
 
 void openFileToCompress(char *path) {
 	FILE* fichier = NULL;
@@ -109,7 +114,7 @@ void insertNewNodeInChainedList(elementListe* elemL, elementListe element1,
 	while (bool == 0) {
 
 		if(elemL->frequence<value && elemL->suivant->frequence>value){
-
+			/* Alors on insert à cet endroit */
 		}
 	}
 
@@ -156,10 +161,6 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
 
 	tri(charTab, intTab, tailleTab);
 
-	for (i = 0; i < tailleTab; i++) {
-		printf(" %c     %d \n", charTab[i], intTab[i]);
-	}
-
 	createChainedList(elemL, charTab, intTab, tailleTab);
 
 	/*tabProba = realloc(tabProba, sizeof(float) * tailleTab + 1);
@@ -178,4 +179,3 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
 	tabProba = NULL;
 
 }
-
