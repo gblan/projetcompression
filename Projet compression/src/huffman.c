@@ -94,8 +94,23 @@ void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
 		elemL = nouveau;
 	}
 
-	for(p=elemL;p!=NULL;p=p->suivant){
-		printf("%c  %d\n",p->caractere,p->frequence);
+	for (p = elemL; p != NULL; p = p->suivant) {
+		printf("%c  %d\n", p->caractere, p->frequence);
+	}
+
+}
+
+void insertNewNodeInChainedList(elementListe* elemL, elementListe element1,
+		elementListe element2) {
+	int value = element1.frequence + element2.frequence;
+	int bool = 0;
+	struct elementListe* p;
+
+	while (bool == 0) {
+
+		if(elemL->frequence<value && elemL->suivant->frequence>value){
+
+		}
 	}
 
 }
@@ -109,7 +124,6 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
 	int nbChar;
 	FILE* archive;
 	FILE** ptArchive = &archive;
-
 
 	elementListe* elemL = NULL;
 
@@ -140,13 +154,13 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
 	/* Creation du tableau de probabilitees */
 	nbChar = sumTab(intTab, tailleTab);
 
-	bubbleSort(charTab, intTab, tailleTab);
+	tri(charTab, intTab, tailleTab);
 
 	for (i = 0; i < tailleTab; i++) {
 		printf(" %c     %d \n", charTab[i], intTab[i]);
 	}
 
-	createChainedList(elemL,charTab,intTab,tailleTab);
+	createChainedList(elemL, charTab, intTab, tailleTab);
 
 	/*tabProba = realloc(tabProba, sizeof(float) * tailleTab + 1);
 	 createTabProba(tabProba, intTab, tailleTab, nbChar);*/

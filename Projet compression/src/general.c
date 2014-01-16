@@ -72,16 +72,15 @@ void readFilechar(FILE** file) {
 	printf("\n");
 }
 
-void bubbleSort(char* charTab, int* tabInt, int tabLength) {
-
+void bubbleSort(int min, int max, char* charTab, int* tabInt) {
 	int bool, i, tmp;
-	int n = tabLength - 1;
+	int n = max - 1;
 	char ctmp;
 
 	/* on fait des permutations, jusqu'a ce qu'on ait effectué un parcours du tableau sans permutation*/
 	do {
 		bool = 0;
-		for (i = 0; i < tabLength; i++) {
+		for (i = min; i < max; i++) {
 			if (tabInt[i] < tabInt[i + 1]) {
 				tmp = tabInt[i + 1];
 				tabInt[i + 1] = tabInt[i];
@@ -95,4 +94,44 @@ void bubbleSort(char* charTab, int* tabInt, int tabLength) {
 		}
 		n--;
 	} while (bool != 0);
+}
+
+void bubbleSortchar(int min, int max, char* charTab, int* tabInt) {
+	int bool, i, tmp;
+	int n = max - 1;
+	char ctmp;
+
+	/* on fait des permutations, jusqu'a ce qu'on ait effectué un parcours du tableau sans permutation*/
+	do {
+		bool = 0;
+		for (i = min; i < max; i++) {
+			if (charTab[i] < charTab[i + 1]) {
+				tmp = tabInt[i + 1];
+				tabInt[i + 1] = tabInt[i];
+				tabInt[i] = tmp;
+				ctmp = charTab[i + 1];
+				charTab[i + 1] = charTab[i];
+				charTab[i] = ctmp;
+
+				bool = 1;
+			}
+		}
+		n--;
+	} while (bool != 0);
+}
+
+void tri(char* charTab, int* intTab, int tabLength) {
+	int i, j = 0;
+	bubbleSort(0, tabLength, charTab, intTab);
+
+	for (i = 0; i < tabLength; i++) {
+		j = 0;
+		if (intTab[i] == intTab[i + 1]) {
+			j = i + 1;
+			while (intTab[i] == intTab[j + 1]) {
+				j++;
+			}
+			bubbleSortchar(i, j, charTab, intTab);
+		}
+	}
 }
