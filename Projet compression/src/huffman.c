@@ -9,8 +9,14 @@
 #include<stdlib.h>
 #include"general.h"
 
+typedef struct elementListe {
+	int frequence;
+	char caractere;
+	struct elementListe* suivant;
+} elementListe;
+
 typedef struct noeud {
-	unsigned int code;
+
 	struct noeud *gauche_0;
 	struct noeud *droite_1;
 } node;
@@ -68,16 +74,34 @@ void createTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab) {
 void createHuffmanTree() {
 	struct noeud racine;
 	struct noeud* test = &racine;
-	racine.code = 0;
 
 	racine.droite_1 = test;
-	test->code = 0;
-	struct noeud* test2= NULL;
+	struct noeud* test2 = NULL;
 	test->droite_1 = test2;
+}
+
+void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
+		int tabLength) {
+	int i;
+	struct elementListe* p;
+	struct elementListe* nouveau;
+
+	for (i = 0; i < tabLength; i++) {
+		nouveau = malloc(1 * sizeof(elementListe));
+		nouveau->caractere = tabChar[i];
+		nouveau->frequence = tabInt[i];
+		nouveau->suivant = elemL;
+		elemL = nouveau;
+	}
+
+	for(p=elemL;p!=NULL;p=p->suivant){
+		printf("%c  %d\n",p->caractere,p->frequence);
+	}
 
 }
 
-void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* archiveName) {
+void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
+		char* archiveName) {
 	char c;
 	int i = 0;
 	int positionChar = 0;
@@ -85,6 +109,9 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* arc
 	int nbChar;
 	FILE* archive;
 	FILE** ptArchive = &archive;
+
+
+	elementListe* elemL = NULL;
 
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
 	while ((c = fgetc(*file)) != EOF) {
@@ -112,13 +139,22 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* arc
 
 	/* Creation du tableau de probabilitees */
 	nbChar = sumTab(intTab, tailleTab);
-	tabProba = realloc(tabProba, sizeof(float) * tailleTab + 1);
-	createTabProba(tabProba, intTab, tailleTab, nbChar);
+
+	bubbleSort(charTab, intTab, tailleTab);
+
+	for (i = 0; i < tailleTab; i++) {
+		printf(" %c     %d \n", charTab[i], intTab[i]);
+	}
+
+	createChainedList(elemL,charTab,intTab,tailleTab);
+
+	/*tabProba = realloc(tabProba, sizeof(float) * tailleTab + 1);
+	 createTabProba(tabProba, intTab, tailleTab, nbChar);*/
 
 	/* Creation de l'archive */
 	/*archive = createFile(archiveName);
-	writeFile(ptArchive,"CONTENU BINAIRE");
-	closeFile(ptArchive);*/
+	 writeFile(ptArchive,"CONTENU BINAIRE");
+	 closeFile(ptArchive);*/
 
 	free(intTab);
 	intTab = NULL;
@@ -126,7 +162,6 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* arc
 	charTab = NULL;
 	free(tabProba);
 	tabProba = NULL;
-
 
 }
 

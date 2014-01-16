@@ -71,3 +71,28 @@ void readFilechar(FILE** file) {
 	}
 	printf("\n");
 }
+
+void bubbleSort(char* charTab, int* tabInt, int tabLength) {
+
+	int bool, i, tmp;
+	int n = tabLength - 1;
+	char ctmp;
+
+	/* on fait des permutations, jusqu'a ce qu'on ait effectué un parcours du tableau sans permutation*/
+	do {
+		bool = 0;
+		for (i = 0; i < tabLength; i++) {
+			if (tabInt[i] < tabInt[i + 1]) {
+				tmp = tabInt[i + 1];
+				tabInt[i + 1] = tabInt[i];
+				tabInt[i] = tmp;
+				ctmp = charTab[i + 1];
+				charTab[i + 1] = charTab[i];
+				charTab[i] = ctmp;
+
+				bool = 1;
+			}
+		}
+		n--;
+	} while (bool != 0);
+}

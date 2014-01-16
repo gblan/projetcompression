@@ -15,5 +15,5 @@ FILE* createFile(char* fileName);
 void writeFile(FILE** fichier, char* stringToWrite);
 char readFile(FILE** file);
 void readFilechar(FILE** file);
-
+void bubbleSort(char* charTab, int* tabInt, int tabLength);
 #endif /* PRINT_H_ */
