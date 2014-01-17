@@ -13,7 +13,7 @@ typedef struct elementListe {
 	int frequence;
 	char caractere;
 	struct elementListe* suivant;
-	struct noeud* noeudCourant;
+	struct noeud* noeudIntermediaire;
 } elementListe;
 
 typedef struct arbre {
@@ -96,6 +96,7 @@ void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
 		nouveau->caractere = tabChar[i];
 		nouveau->frequence = tabInt[i];
 		nouveau->suivant = elemL;
+		nouveau->noeudIntermediaire = NULL;
 		elemL = nouveau;
 	}
 
@@ -105,19 +106,42 @@ void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
 
 }
 
-void insertNewNodeInChainedList(elementListe* elemL, elementListe element1,
-		elementListe element2) {
-	int value = element1.frequence + element2.frequence;
-	int bool = 0;
+void insertNewNodeInChainedList(elementListe* elemL) {
+	int value;
 	struct elementListe* p;
+	struct elementListe* pt2;
 
-	while (bool == 0) {
+	struct elementListe* nouveau;
+	struct noeud* noeudRacine;
+	struct noeud* noeudGauche;
+	struct noeud* noeudDroit;
 
-		if(elemL->frequence<value && elemL->suivant->frequence>value){
-			/* Alors on insert à cet endroit */
+	for (p = elemL; p->suivant != NULL; p = p->suivant) {
+
+		nouveau = malloc(1*sizeof(elementListe));
+		value = p->frequence + p->suivant->frequence;
+		nouveau->frequence = value;
+		nouveau->caractere = '\0';
+
+		for (pt2 = p->suivant; pt2->suivant != NULL; pt2 = pt2->suivant) {
+
+		}
+
+	if (elemL->frequence < value && elemL->suivant->frequence > value) {
+		/* Alors on insert à cet endroit */
+
+		/* INSERTION DIFFICILE */
+		if(elemL->noeudIntermediaire!=NULL && elemL->suivant->noeudIntermediaire != NULL){
+
+		} else if(elemL->noeudIntermediaire==NULL && elemL->suivant->noeudIntermediaire != NULL){
+
+		} else if(elemL->noeudIntermediaire!=NULL && elemL->suivant->noeudIntermediaire == NULL){
+
+		} else if(elemL->noeudIntermediaire==NULL && elemL->suivant->noeudIntermediaire == NULL){
+			/* INSERTION FACILE*/
 		}
 	}
-
+	}
 }
 
 void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
@@ -131,6 +155,7 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
 	FILE** ptArchive = &archive;
 
 	elementListe* elemL = NULL;
+	elementListe* p;
 
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
 	while ((c = fgetc(*file)) != EOF) {
@@ -171,6 +196,9 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
 	 writeFile(ptArchive,"CONTENU BINAIRE");
 	 closeFile(ptArchive);*/
 
+	for (p = elemL; p != NULL; p = p->suivant) {
+		free(elemL);
+	}
 	free(intTab);
 	intTab = NULL;
 	free(charTab);
