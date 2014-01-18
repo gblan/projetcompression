@@ -103,45 +103,69 @@ void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
 	for (p = elemL; p != NULL; p = p->suivant) {
 		printf("%c  %d\n", p->caractere, p->frequence);
 	}
-
 }
+
 
 void insertNewNodeInChainedList(elementListe* elemL) {
 	int value;
 	struct elementListe* p;
-	struct elementListe* pt2;
 
 	struct elementListe* nouveau;
 	struct noeud* noeudRacine;
 	struct noeud* noeudGauche;
 	struct noeud* noeudDroit;
 
-	for (p = elemL; p->suivant != NULL; p = p->suivant) {
+	nouveau = malloc(1 * sizeof(elementListe));
+	p = elemL;
+	value = p->frequence + p->suivant->frequence;
+	nouveau->frequence = value;
+	nouveau->caractere = '\0';
 
-		nouveau = malloc(1*sizeof(elementListe));
-		value = p->frequence + p->suivant->frequence;
-		nouveau->frequence = value;
-		nouveau->caractere = '\0';
+	/* on cherche le nombre de probas simillaires dans la liste chainée*/
+	/* et on ajoute a la fin des mêmes probas*/
 
-		for (pt2 = p->suivant; pt2->suivant != NULL; pt2 = pt2->suivant) {
-
-		}
-
-	if (elemL->frequence < value && elemL->suivant->frequence > value) {
+	if (p->frequence < value && p->suivant->frequence > value) {
 		/* Alors on insert à cet endroit */
 
-		/* INSERTION DIFFICILE */
-		if(elemL->noeudIntermediaire!=NULL && elemL->suivant->noeudIntermediaire != NULL){
+		if (p->noeudIntermediaire == NULL && p->suivant->noeudIntermediaire == NULL) {
+				/* INSERTION FACILE*/
+			noeudGauche->caractere = p->caractere;
+			noeudGauche->droite_1 = NULL;
+			noeudGauche->gauche_0 = NULL;
+			noeudDroit->caractere = p->suivant->caractere;
+			noeudDroit->droite_1 = NULL;
+			noeudDroit->gauche_0 = NULL;
 
-		} else if(elemL->noeudIntermediaire==NULL && elemL->suivant->noeudIntermediaire != NULL){
+		} else if (p->noeudIntermediaire == NULL && p->suivant->noeudIntermediaire != NULL) {
+				/* INSERTION UN PEU DURE*/
+			noeudGauche->caractere = p->caractere;
+			noeudGauche->droite_1 = NULL;
+			noeudGauche->gauche_0 = NULL;
+			noeudDroit = p->suivant->noeudIntermediaire;
 
-		} else if(elemL->noeudIntermediaire!=NULL && elemL->suivant->noeudIntermediaire == NULL){
+		} else if (p->noeudIntermediaire != NULL && p->suivant->noeudIntermediaire == NULL) {
+			/* INSERTION UN PEU DURE ENCORE*/
+			noeudGauche = p->noeudIntermediaire;
+			noeudDroit->caractere = p->suivant->caractere;
+			noeudDroit->droite_1 = NULL;
+			noeudDroit->gauche_0 = NULL;
 
-		} else if(elemL->noeudIntermediaire==NULL && elemL->suivant->noeudIntermediaire == NULL){
-			/* INSERTION FACILE*/
+
+		} else if (p->noeudIntermediaire != NULL && p->suivant->noeudIntermediaire != NULL) {
+				/* INSERTION DIFFICILE */
+			noeudGauche = p->noeudIntermediaire;
+			noeudDroit = p->suivant->noeudIntermediaire;
 		}
+
+		noeudRacine->caractere = '\0';
+		noeudRacine->gauche_0 = noeudGauche;
+		noeudRacine->droite_1 = noeudDroit;
 	}
-	}
+
+	nouveau->noeudIntermediaire = noeudRacine;
+	/* Liaison de l'element nouveau avec la liste chainée*/
+	/* Suppression des 2 premiers elements avec un free*/
+
 }
 
 void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
@@ -188,6 +212,9 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
 
 	createChainedList(elemL, charTab, intTab, tailleTab);
 
+	/*while (elemL->suivant != NULL) {
+		insertNewNodeInChainedList(elemL);
+	}*/
 	/*tabProba = realloc(tabProba, sizeof(float) * tailleTab + 1);
 	 createTabProba(tabProba, intTab, tailleTab, nbChar);*/
 
@@ -199,6 +226,7 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
 	for (p = elemL; p != NULL; p = p->suivant) {
 		free(elemL);
 	}
+
 	free(intTab);
 	intTab = NULL;
 	free(charTab);
