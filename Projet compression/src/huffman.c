@@ -55,7 +55,6 @@ int isInTab(char c, char* charTab) {
 }
 
 int sumTab(int* tabInt, int tailleTab) {
-
 	int i = 0, result = 0;
 
 	for (i = 0; i < tailleTab; i++) {
@@ -65,7 +64,6 @@ int sumTab(int* tabInt, int tailleTab) {
 }
 
 void createTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab) {
-
 	int i = 0;
 
 	for (i = 0; i < tailleTab; i++) {
@@ -85,8 +83,7 @@ void createHuffmanTree() {
 	test->droite_1 = test2;
 }
 
-void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
-		int tabLength) {
+void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,	int tabLength) {
 	int i;
 	struct elementListe* p;
 	struct elementListe* nouveau;
@@ -105,21 +102,44 @@ void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
 	}
 }
 
+void deleteTwoFirstElements(elementListe* elemL){
+	struct elementListe* elem1;
+	struct elementListe* elem2;
+	struct elementListe* p;
+
+	elem1 = elemL;
+	elem2 = elemL->suivant;
+	elemL = elemL->suivant->suivant;
+
+	free(elem1);
+	elem1 = NULL;
+	free(elem2);
+	elem2 = NULL;
+
+	for (p = elemL; p != NULL; p = p->suivant) {
+		printf("%c  %d\n", p->caractere, p->frequence);
+	}
+}
+
+void linkElementWithChaindList(elementListe* elemL, elementListe* element){
+
+}
 
 void insertNewNodeInChainedList(elementListe* elemL) {
 	int value;
 	struct elementListe* p;
-
 	struct elementListe* nouveau;
-	struct noeud* noeudRacine;
-	struct noeud* noeudGauche;
-	struct noeud* noeudDroit;
+
+	struct noeud* noeudRacine = NULL;
+	struct noeud* noeudGauche = NULL;
+	struct noeud* noeudDroit = NULL;
 
 	nouveau = malloc(1 * sizeof(elementListe));
 	p = elemL;
 	value = p->frequence + p->suivant->frequence;
 	nouveau->frequence = value;
 	nouveau->caractere = '\0';
+	nouveau->suivant = NULL;
 
 	/* on cherche le nombre de probas simillaires dans la liste chainée*/
 	/* et on ajoute a la fin des mêmes probas*/
@@ -164,7 +184,14 @@ void insertNewNodeInChainedList(elementListe* elemL) {
 
 	nouveau->noeudIntermediaire = noeudRacine;
 	/* Liaison de l'element nouveau avec la liste chainée*/
+	linkElementWithChaindList(elemL,nouveau);
+
 	/* Suppression des 2 premiers elements avec un free*/
+	deleteTwoFirstElements(p);
+
+}
+
+void infixeHuffmanTree(int *intTab, char *charTab, arbre huffmanTree){
 
 }
 
@@ -211,6 +238,8 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
 	tri(charTab, intTab, tailleTab);
 
 	createChainedList(elemL, charTab, intTab, tailleTab);
+	/* test*/
+	/*deleteTwoFirstElements(elemL);*/
 
 	/*while (elemL->suivant != NULL) {
 		insertNewNodeInChainedList(elemL);
