@@ -34,7 +34,8 @@ void createChainedList(elementListe* elemL, char* tabChar, int* tabInt, int tabL
 void deleteTwoFirstElements(elementListe* elemL);
 void linkElementWithChaindList(elementListe* elemL, elementListe* element);
 void insertNewNodeInChainedList(elementListe* elemL);
-void infixeHuffmanTree(int *intTab, char *charTab, arbre huffmanTree);
+void visiteNoeud(noeud* huffmanTree, int* tabChar, char** tabHuffCode, char* currentCode, int tailleTab);
+void infixeHuffmanTree(noeud* huffmanTree, char* tabChar, char** tabHuffCode, char* currentCode, int tailleTab);
 void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* archiveName);
 
 #endif /* HUFFMAN_H_ */

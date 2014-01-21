@@ -83,7 +83,8 @@ void createHuffmanTree() {
 	test->droite_1 = test2;
 }
 
-void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,	int tabLength) {
+void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
+		int tabLength) {
 	int i;
 	struct elementListe* p;
 	struct elementListe* nouveau;
@@ -102,7 +103,7 @@ void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,	int tabL
 	}
 }
 
-void deleteTwoFirstElements(elementListe* elemL){
+void deleteTwoFirstElements(elementListe* elemL) {
 	struct elementListe* elem1;
 	struct elementListe* elem2;
 	struct elementListe* p;
@@ -121,7 +122,7 @@ void deleteTwoFirstElements(elementListe* elemL){
 	}
 }
 
-void linkElementWithChaindList(elementListe* elemL, elementListe* element){
+void linkElementWithChaindList(elementListe* elemL, elementListe* element) {
 
 }
 
@@ -147,8 +148,9 @@ void insertNewNodeInChainedList(elementListe* elemL) {
 	if (p->frequence < value && p->suivant->frequence > value) {
 		/* Alors on insert à cet endroit */
 
-		if (p->noeudIntermediaire == NULL && p->suivant->noeudIntermediaire == NULL) {
-				/* INSERTION FACILE*/
+		if (p->noeudIntermediaire == NULL
+				&& p->suivant->noeudIntermediaire == NULL) {
+			/* INSERTION FACILE*/
 			noeudGauche->caractere = p->caractere;
 			noeudGauche->droite_1 = NULL;
 			noeudGauche->gauche_0 = NULL;
@@ -156,23 +158,25 @@ void insertNewNodeInChainedList(elementListe* elemL) {
 			noeudDroit->droite_1 = NULL;
 			noeudDroit->gauche_0 = NULL;
 
-		} else if (p->noeudIntermediaire == NULL && p->suivant->noeudIntermediaire != NULL) {
-				/* INSERTION UN PEU DURE*/
+		} else if (p->noeudIntermediaire == NULL
+				&& p->suivant->noeudIntermediaire != NULL) {
+			/* INSERTION UN PEU DURE*/
 			noeudGauche->caractere = p->caractere;
 			noeudGauche->droite_1 = NULL;
 			noeudGauche->gauche_0 = NULL;
 			noeudDroit = p->suivant->noeudIntermediaire;
 
-		} else if (p->noeudIntermediaire != NULL && p->suivant->noeudIntermediaire == NULL) {
+		} else if (p->noeudIntermediaire != NULL
+				&& p->suivant->noeudIntermediaire == NULL) {
 			/* INSERTION UN PEU DURE ENCORE*/
 			noeudGauche = p->noeudIntermediaire;
 			noeudDroit->caractere = p->suivant->caractere;
 			noeudDroit->droite_1 = NULL;
 			noeudDroit->gauche_0 = NULL;
 
-
-		} else if (p->noeudIntermediaire != NULL && p->suivant->noeudIntermediaire != NULL) {
-				/* INSERTION DIFFICILE */
+		} else if (p->noeudIntermediaire != NULL
+				&& p->suivant->noeudIntermediaire != NULL) {
+			/* INSERTION DIFFICILE */
 			noeudGauche = p->noeudIntermediaire;
 			noeudDroit = p->suivant->noeudIntermediaire;
 		}
@@ -184,26 +188,50 @@ void insertNewNodeInChainedList(elementListe* elemL) {
 
 	nouveau->noeudIntermediaire = noeudRacine;
 	/* Liaison de l'element nouveau avec la liste chainée*/
-	linkElementWithChaindList(elemL,nouveau);
+	linkElementWithChaindList(elemL, nouveau);
 
 	/* Suppression des 2 premiers elements avec un free*/
 	deleteTwoFirstElements(p);
 
 }
 
-void infixeHuffmanTree(int *intTab, char *charTab, arbre huffmanTree){
+/* non testé*/
+void visiteNoeud(noeud* huffmanTree, char* tabChar, char** tabHuffCode, char* currentCode, int tailleTab) {
 
+	tabChar = realloc (tabChar, tailleTab*sizeof(char));
+	tabHuffCode = realloc (tabHuffCode, tailleTab*sizeof(char*));
+
+	tabChar[tailleTab] = huffmanTree->caractere;
+	tabHuffCode[tailleTab] = currentCode;
+	tailleTab++;
 }
 
-void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
-		char* archiveName) {
+/* non testé */
+void infixeHuffmanTree(noeud* huffmanTree, char* tabChar, char** tabHuffCode, char* currentCode, int tailleTab) {
+
+	if ((huffmanTree->gauche_0) != NULL) {
+		currentCode = realloc(currentCode, 1 * sizeof(char));
+		currentCode = strcat(currentCode, "0");
+		infixeHuffmanTree(huffmanTree->gauche_0, tabChar, tabHuffCode, currentCode, tailleTab);
+	}
+	if ((huffmanTree->droite_1) != NULL) {
+		currentCode = realloc(currentCode, 1 * sizeof(char));
+		currentCode = strcat(currentCode, "1");
+		infixeHuffmanTree(huffmanTree->droite_1, tabChar, tabHuffCode, currentCode, tailleTab);
+	}
+	visiteNoeud(huffmanTree, tabChar, tabHuffCode, currentCode, tailleTab);
+}
+
+
+void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* archiveName) {
 	char c;
 	int i = 0;
 	int positionChar = 0;
 	int tailleTab = 0;
 	int nbChar;
-	FILE* archive;
-	FILE** ptArchive = &archive;
+	char* tabChar;
+	char** tabHuffCode;
+	char* currentCode;
 
 	elementListe* elemL = NULL;
 	elementListe* p;
@@ -238,12 +266,22 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba,
 	tri(charTab, intTab, tailleTab);
 
 	createChainedList(elemL, charTab, intTab, tailleTab);
+
 	/* test*/
 	/*deleteTwoFirstElements(elemL);*/
 
 	/*while (elemL->suivant != NULL) {
-		insertNewNodeInChainedList(elemL);
-	}*/
+	 insertNewNodeInChainedList(elemL);
+	 }*/
+
+	tabChar = malloc(1*sizeof(char));
+	currentCode= malloc(1*sizeof(char));
+	tabHuffCode = malloc(1*sizeof(char*));
+	/*
+	infixeHuffmanTree(elemL->noeudIntermediaire,tabChar, tabHuffCode, currentCode, 0);
+	*/
+	/* free tout ça */
+
 	/*tabProba = realloc(tabProba, sizeof(float) * tailleTab + 1);
 	 createTabProba(tabProba, intTab, tailleTab, nbChar);*/
 
