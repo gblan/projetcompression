@@ -8,11 +8,6 @@
 #ifndef HUFFMAN_H_
 #define HUFFMAN_H_
 
-typedef struct liste{
-	int nbElements;
-	struct elementListe* tete;
-} liste;
-
 typedef struct elementListe {
 	int frequence;
 	char caractere;
@@ -35,8 +30,8 @@ int isInTab(char c, char* charTab);
 int sumTab(int* tabInt, int tailleTab);
 void createTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab);
 void createHuffmanTree();
-void createChainedList(liste* listeChainee, elementListe* elemL, char* tabChar, int* tabInt, int tabLength);
-void deleteTwoFirstElements(elementListe** elemL);
+void createChainedList(elementListe* elemL, char* tabChar, int* tabInt, int tabLength);
+void deleteTwoFirstElements(elementListe* elemL);
 void linkElementWithChaindList(elementListe* elemL, elementListe* element);
 void insertNewNodeInChainedList(elementListe* elemL);
 void visiteNoeud(noeud* huffmanTree, int* tabChar, char** tabHuffCode, char* currentCode, int tailleTab);

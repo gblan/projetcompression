@@ -88,7 +88,7 @@ void createHuffmanTree() {
 	test->droite_1 = test2;
 }
 
-void createChainedList(liste* listeChainee, elementListe* elemL, char* tabChar, int* tabInt,
+void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
 		int tabLength) {
 	int i;
 	struct elementListe* p;
@@ -103,36 +103,22 @@ void createChainedList(liste* listeChainee, elementListe* elemL, char* tabChar, 
 		elemL = nouveau;
 	}
 
-	listeChainee = malloc(1*sizeof(liste));
-	listeChainee->nbElements = tabLength;
-	listeChainee->tete = elemL;
-
 	for (p = elemL; p != NULL; p = p->suivant) {
 		printf("2-%c   %d\n", p->caractere, p->frequence);
 	}
 }
 
-void deleteTwoFirstElements(liste* liste) {
+void deleteTwoFirstElements(elementListe* liste) {
 	struct elementListe* elem1 = NULL;
-	struct elementListe* elem2 = NULL;
 
-	elem1 = malloc(1*sizeof(elementListe));
-
-	elem1 = liste->tete;
-	elem2 = liste->tete->suivant;
-	liste->tete = liste->tete->suivant->suivant;
+	/*elem1 = liste->suivant;
+	liste= liste->suivant;
 
 	elem1->suivant = NULL;
-	free(elem1->suivant);
-	free(elem1->noeudIntermediaire);
-	free(elem1);
+*/	free(elem1);
+
 	elem1 = NULL;
 
-	elem2->suivant = NULL;
-	free(elem2->suivant);
-	free(elem2->noeudIntermediaire);
-	free(elem2);
-	elem2 = NULL;
 
 	/*for (p = liste; p != NULL; p = p->tete->suivant) {
 		printf("3-%c   %d\n", p->tete->caractere, p->tete->frequence);
@@ -258,7 +244,6 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	char** tabHuffCode;
 	char* currentCode;
 
-	liste* listeChainee = NULL;
 	elementListe* elemL = NULL;
 	elementListe* p;
 
@@ -292,11 +277,11 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	tri(charTab, intTab, tailleTab);
 	printf("\n");
 
-	createChainedList(listeChainee,elemL, charTab, intTab, tailleTab);
+	createChainedList(elemL, charTab, intTab, tailleTab);
 	printf("\n");
 
 	/* TODO A CORRIGER */
-	/*deleteTwoFirstElements(listeChainee);*/
+	deleteTwoFirstElements(elemL);
 
 	/*while (elemL->suivant != NULL) {
 	 insertNewNodeInChainedList(elemL);
@@ -318,7 +303,6 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	for (p = elemL; p != NULL; p = p->suivant) {
 		free(elemL);
 	}
-	free(listeChainee);
 	free(intTab);
 	intTab = NULL;
 	free(charTab);
