@@ -17,16 +17,16 @@ char* checkFileName(char* fileName, int longueurChaine) {
 	return result;
 }
 
-int openFile(char* fileName, FILE** fichier) {
-	*fichier = fopen(fileName, "r+");
+int openFile(char* filename, FILE** fichier, char* mode) {
+	*fichier = fopen(filename, mode);
 
 	if (*fichier != NULL) {
-		printf("Open OK\n");
+		printf("Open \"%s\" OK\n",filename);
 		return 0;
 
 	} else {
-		printf("Open KO\n");
-		return -1;
+		printf("Open \"%s\" KO\n",filename);
+		exit(-1);
 	}
 }
 
@@ -134,4 +134,25 @@ void tri(char* charTab, int* intTab, int tabLength) {
 			bubbleSortchar(i, j, charTab, intTab);
 		}
 	}
+}
+
+void createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName) {
+	int longueurNomFichier = 0;
+
+	longueurNomFichier = strlen(fileName);
+	archiveName = malloc((longueurNomFichier + 8) * sizeof(char));
+	strcat(archiveName, fileName);
+	strcat(archiveName, ".huffman");
+	openFile(archiveName, ptFileOutput, "ab");
+	closeFile(ptFileOutput);
+
+}
+
+void writeBinary(char* huffmanCode, char* tabChar, FILE** ptBinaryFile, char* archiveName) {
+	/* d'abord on met la taille du dictionnaire de données (char, huff)*/
+	/* puis le dictionnaire lui même*/
+	/* puis on affiche le code de huffman*/
+
+	/*fwrite( &c , sizeof(char) , 2 , *ptBinaryFile);
+*/
 }

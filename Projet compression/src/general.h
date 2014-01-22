@@ -9,7 +9,7 @@
 #define GENERAL_H_
 
 char* checkFileName(char* fileName, int longueurChaine);
-int openFile(char* filename, FILE** fichier);
+int openFile(char* filename, FILE** fichier, char* mode);
 void closeFile(FILE** fichier);
 FILE* createFile(char* fileName);
 void writeFile(FILE** fichier, char* stringToWrite);
@@ -18,4 +18,6 @@ void readFilechar(FILE** file);
 void bubbleSort(char* charTab, int* tabInt, int tabLength);
 void bubbleSortchar(int min, int max, char* charTab, int* tabInt);
 void tri(char* charTab, int* intTab, int tabLength);
+void createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName);
+void writeBinary(char* huffmanCode, char* tabChar, FILE** ptBinaryFile, char* archiveName);
 #endif /* PRINT_H_ */

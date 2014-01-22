@@ -9,6 +9,11 @@
 #include<stdlib.h>
 #include"general.h"
 
+typedef struct liste{
+	int nbElements;
+	struct elementListe* tete;
+} liste;
+
 typedef struct elementListe {
 	int frequence;
 	char caractere;
@@ -83,7 +88,7 @@ void createHuffmanTree() {
 	test->droite_1 = test2;
 }
 
-void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
+void createChainedList(liste* listeChainee, elementListe* elemL, char* tabChar, int* tabInt,
 		int tabLength) {
 	int i;
 	struct elementListe* p;
@@ -98,33 +103,40 @@ void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
 		elemL = nouveau;
 	}
 
+	listeChainee = malloc(1*sizeof(liste));
+	listeChainee->nbElements = tabLength;
+	listeChainee->tete = elemL;
+
 	for (p = elemL; p != NULL; p = p->suivant) {
 		printf("2-%c   %d\n", p->caractere, p->frequence);
 	}
 }
 
-void deleteTwoFirstElements(elementListe* elemL) {
-	struct elementListe* elem1;
-	struct elementListe* elem2;
-	struct elementListe* p;
+void deleteTwoFirstElements(liste* liste) {
+	struct elementListe* elem1 = NULL;
+	struct elementListe* elem2 = NULL;
 
-	elem1 = elemL;
-	elem2 = elemL->suivant;
-	elemL = elemL->suivant->suivant;
+	elem1 = malloc(1*sizeof(elementListe));
 
-	elem1->suivant=NULL;
+	elem1 = liste->tete;
+	elem2 = liste->tete->suivant;
+	liste->tete = liste->tete->suivant->suivant;
+
+	elem1->suivant = NULL;
+	free(elem1->suivant);
 	free(elem1->noeudIntermediaire);
 	free(elem1);
 	elem1 = NULL;
 
 	elem2->suivant = NULL;
+	free(elem2->suivant);
 	free(elem2->noeudIntermediaire);
 	free(elem2);
 	elem2 = NULL;
 
-	for (p = elemL; p != NULL; p = p->suivant) {
-		printf("3-%c   %d\n", p->caractere, p->frequence);
-	}
+	/*for (p = liste; p != NULL; p = p->tete->suivant) {
+		printf("3-%c   %d\n", p->tete->caractere, p->tete->frequence);
+	}*/
 }
 
 void linkElementWithChaindList(elementListe* elemL, elementListe* element) {
@@ -140,12 +152,15 @@ void insertNewNodeInChainedList(elementListe* elemL) {
 	struct noeud* noeudGauche = NULL;
 	struct noeud* noeudDroit = NULL;
 
-	nouveau = malloc(1 * sizeof(elementListe));
 	p = elemL;
 	value = p->frequence + p->suivant->frequence;
+	nouveau = malloc(1 * sizeof(elementListe));
 	nouveau->frequence = value;
 	nouveau->caractere = '\0';
 	nouveau->suivant = NULL;
+	noeudRacine = malloc(1 * sizeof(noeud));
+	noeudGauche = malloc(1 * sizeof(noeud));
+	noeudDroit = malloc(1 * sizeof(noeud));
 
 	/* on cherche le nombre de probas simillaires dans la liste chainée*/
 	/* et on ajoute a la fin des mêmes probas*/
@@ -201,34 +216,39 @@ void insertNewNodeInChainedList(elementListe* elemL) {
 }
 
 /* non testé*/
-void visiteNoeud(noeud* huffmanTree, char* tabChar, char** tabHuffCode, char* currentCode, int tailleTab) {
+void visiteNoeud(noeud* huffmanTree, char* tabChar, char** tabHuffCode,
+		char* currentCode, int tailleTab) {
 
-	tabChar = realloc (tabChar, tailleTab*sizeof(char));
-	tabHuffCode = realloc (tabHuffCode, tailleTab*sizeof(char*));
+	tabChar = realloc(tabChar, tailleTab * sizeof(char));
+	tabHuffCode = realloc(tabHuffCode, tailleTab * sizeof(char*));
 
-	tabChar[tailleTab] = huffmanTree->caractere;
-	tabHuffCode[tailleTab] = currentCode;
-	tailleTab++;
+	if (huffmanTree->caractere != '\0') {
+		tabChar[tailleTab] = huffmanTree->caractere;
+		tabHuffCode[tailleTab] = currentCode;
+		tailleTab++;
+	}
 }
 
 /* non testé */
-void infixeHuffmanTree(noeud* huffmanTree, char* tabChar, char** tabHuffCode, char* currentCode, int tailleTab) {
+void infixeHuffmanTree(noeud* huffmanTree, char* tabChar, char** tabHuffCode,
+		char* currentCode, int tailleTab) {
 
 	if ((huffmanTree->gauche_0) != NULL) {
 		currentCode = realloc(currentCode, 1 * sizeof(char));
 		currentCode = strcat(currentCode, "0");
-		infixeHuffmanTree(huffmanTree->gauche_0, tabChar, tabHuffCode, currentCode, tailleTab);
+		infixeHuffmanTree(huffmanTree->gauche_0, tabChar, tabHuffCode,
+				currentCode, tailleTab);
 	}
 	if ((huffmanTree->droite_1) != NULL) {
 		currentCode = realloc(currentCode, 1 * sizeof(char));
 		currentCode = strcat(currentCode, "1");
-		infixeHuffmanTree(huffmanTree->droite_1, tabChar, tabHuffCode, currentCode, tailleTab);
+		infixeHuffmanTree(huffmanTree->droite_1, tabChar, tabHuffCode,
+				currentCode, tailleTab);
 	}
 	visiteNoeud(huffmanTree, tabChar, tabHuffCode, currentCode, tailleTab);
 }
 
-
-void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* archiveName) {
+void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	char c;
 	int i = 0;
 	int positionChar = 0;
@@ -238,6 +258,7 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* arc
 	char** tabHuffCode;
 	char* currentCode;
 
+	liste* listeChainee = NULL;
 	elementListe* elemL = NULL;
 	elementListe* p;
 
@@ -271,26 +292,23 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* arc
 	tri(charTab, intTab, tailleTab);
 	printf("\n");
 
-	createChainedList(elemL, charTab, intTab, tailleTab);
+	createChainedList(listeChainee,elemL, charTab, intTab, tailleTab);
 	printf("\n");
 
-	/* test*/
-	deleteTwoFirstElements(elemL);
+	/* TODO A CORRIGER */
+	/*deleteTwoFirstElements(listeChainee);*/
 
 	/*while (elemL->suivant != NULL) {
 	 insertNewNodeInChainedList(elemL);
 	 }*/
 
-	tabChar = malloc(1*sizeof(char));
-	currentCode= malloc(1*sizeof(char));
-	tabHuffCode = malloc(1*sizeof(char*));
+	tabChar = malloc(1 * sizeof(char));
+	currentCode = malloc(1 * sizeof(char));
+	tabHuffCode = malloc(1 * sizeof(char*));
 	/*
-	infixeHuffmanTree(elemL->noeudIntermediaire,tabChar, tabHuffCode, currentCode, 0);
-	*/
+	 infixeHuffmanTree(elemL->noeudIntermediaire,tabChar, tabHuffCode, currentCode, 0);
+	 */
 	/* free tout ça */
-
-	/*tabProba = realloc(tabProba, sizeof(float) * tailleTab + 1);
-	 createTabProba(tabProba, intTab, tailleTab, nbChar);*/
 
 	/* Creation de l'archive */
 	/*archive = createFile(archiveName);
@@ -300,12 +318,10 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* arc
 	for (p = elemL; p != NULL; p = p->suivant) {
 		free(elemL);
 	}
-
+	free(listeChainee);
 	free(intTab);
 	intTab = NULL;
 	free(charTab);
 	charTab = NULL;
-	free(tabProba);
-	tabProba = NULL;
 
 }

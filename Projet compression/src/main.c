@@ -15,12 +15,13 @@
 int main(int argc, char *argv[]) {
 	int Comp = 0;
 	int UnComp = 0;
-	FILE* fichier = NULL;
-	FILE** file = &fichier;
+	FILE* fileInput = NULL;
+	FILE** ptFileInput = &fileInput;
+	FILE* fileOutput = NULL;
+	FILE** ptFileOutput = &fileOutput;
 	int* intTab;
 	char* charTab;
-	char* archiveName;
-	float* tabProba;
+	char* archiveName = NULL;
 
 	if (argc != 3) {
 		printf("##### Missing parameters\n");
@@ -34,17 +35,18 @@ int main(int argc, char *argv[]) {
 			printf("##### Compression\n");
 			intTab = calloc(1, sizeof(int));
 			charTab = calloc(1, sizeof(char));
-			tabProba = calloc(1, sizeof(float));
 
-			if (openFile(argv[2], file) != 0) {
+			if (openFile(argv[2], ptFileInput, "r+") != 0) {
 				printf("Erreur d'ouverture du fichier\n");
 				return -1;
 
 			}
-			/* Récupérer le nom du fichier et le stocker dans archiveName*/
-			/* archiveName = checkFileName(argv[2], strlen(argv[2]));*/
-			huffman(file, intTab, charTab, tabProba, archiveName);
-			closeFile(file);
+
+			huffman(ptFileInput, intTab, charTab, archiveName);
+
+			/*createBinaryFile(argv[2],ptFileOutput, archiveName);
+			 */
+			closeFile(ptFileInput);
 
 		} else if (UnComp == 0) {
 			printf("##### UnCompression\n");
