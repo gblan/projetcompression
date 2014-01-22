@@ -9,7 +9,7 @@
 #include<stdlib.h>
 #include"general.h"
 
-typedef struct liste{
+typedef struct liste {
 	int nbElements;
 	struct elementListe* tete;
 } liste;
@@ -88,44 +88,36 @@ void createHuffmanTree() {
 	test->droite_1 = test2;
 }
 
-void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
-		int tabLength) {
-	int i;
-	struct elementListe* p;
+void createChainedList(elementListe** elemL, char charToAdd, int intToAdd) {
 	struct elementListe* nouveau;
 
-	for (i = 0; i < tabLength; i++) {
-		nouveau = malloc(1 * sizeof(elementListe));
-		nouveau->caractere = tabChar[i];
-		nouveau->frequence = tabInt[i];
-		nouveau->suivant = elemL;
-		nouveau->noeudIntermediaire = NULL;
-		elemL = nouveau;
-	}
-
-	for (p = elemL; p != NULL; p = p->suivant) {
-		printf("2-%c   %d\n", p->caractere, p->frequence);
-	}
+	nouveau = calloc(1, sizeof(elementListe));
+	nouveau->caractere = charToAdd;
+	nouveau->frequence = intToAdd;
+	nouveau->suivant = *elemL;
+	nouveau->noeudIntermediaire = NULL;
+	*elemL = nouveau;
 }
 
-void deleteTwoFirstElements(elementListe* liste) {
-	struct elementListe* elem1 = NULL;
+void deleteTwoFirstElements(elementListe** liste) {
+	struct elementListe* elem1;
+	struct elementListe* elem2;
 
-	/*elem1 = liste->suivant;
-	liste= liste->suivant;
-
+	elem1 = *liste;
+	*liste = (*liste)->suivant;
 	elem1->suivant = NULL;
-*/	free(elem1);
-
+	free(elem1);
 	elem1 = NULL;
 
+	elem2 = *liste;
+	*liste = (*liste)->suivant;
+	elem2->suivant = NULL;
+	free(elem2);
+	elem2 = NULL;
 
-	/*for (p = liste; p != NULL; p = p->tete->suivant) {
-		printf("3-%c   %d\n", p->tete->caractere, p->tete->frequence);
-	}*/
 }
 
-void linkElementWithChaindList(elementListe* elemL, elementListe* element) {
+void linkElementWithChaindList() {
 
 }
 
@@ -245,7 +237,8 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	char* currentCode;
 
 	elementListe* elemL = NULL;
-	elementListe* p;
+	elementListe** p = &elemL;
+	elementListe* a = NULL;
 
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
 	while ((c = fgetc(*file)) != EOF) {
@@ -271,25 +264,34 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 		printf("1-%c   %d\n", charTab[i], intTab[i]);
 	}
 
-	/* Creation du tableau de probabilitees */
-	nbChar = sumTab(intTab, tailleTab);
-
 	tri(charTab, intTab, tailleTab);
-	printf("\n");
 
-	createChainedList(elemL, charTab, intTab, tailleTab);
+	for (i = 0; i < tailleTab; i++) {
+		createChainedList(p, charTab[i], intTab[i]);
+	}
+
+	/* Affichage liste chainée */
+	for (a = *p; a != NULL; a = a->suivant) {
+		printf("2-%c   %d\n", a->caractere, a->frequence);
+	}
 	printf("\n");
 
 	/* TODO A CORRIGER */
-	deleteTwoFirstElements(elemL);
+
+	deleteTwoFirstElements(p);
+
+	for (a = *p; a != NULL; a = a->suivant) {
+		printf("3-%c   %d\n", a->caractere, a->frequence);
+	}
+	printf("\n");
 
 	/*while (elemL->suivant != NULL) {
 	 insertNewNodeInChainedList(elemL);
 	 }*/
 
-	tabChar = malloc(1 * sizeof(char));
-	currentCode = malloc(1 * sizeof(char));
-	tabHuffCode = malloc(1 * sizeof(char*));
+	/*tabChar = malloc(1 * sizeof(char));
+	 currentCode = malloc(1 * sizeof(char));
+	 tabHuffCode = malloc(1 * sizeof(char*));*/
 	/*
 	 infixeHuffmanTree(elemL->noeudIntermediaire,tabChar, tabHuffCode, currentCode, 0);
 	 */
@@ -300,9 +302,7 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	 writeFile(ptArchive,"CONTENU BINAIRE");
 	 closeFile(ptArchive);*/
 
-	for (p = elemL; p != NULL; p = p->suivant) {
-		free(elemL);
-	}
+	free(elemL);
 	free(intTab);
 	intTab = NULL;
 	free(charTab);
