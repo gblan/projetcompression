@@ -271,14 +271,12 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	}
 
 	/* Affichage liste chainée */
+	printf("\n");
+
 	for (a = *p; a != NULL; a = a->suivant) {
 		printf("2-%c   %d\n", a->caractere, a->frequence);
 	}
 	printf("\n");
-
-	/* TODO A CORRIGER */
-
-	deleteTwoFirstElements(p);
 
 	for (a = *p; a != NULL; a = a->suivant) {
 		printf("3-%c   %d\n", a->caractere, a->frequence);
