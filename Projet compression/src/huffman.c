@@ -99,7 +99,7 @@ void createChainedList(elementListe* elemL, char* tabChar, int* tabInt,
 	}
 
 	for (p = elemL; p != NULL; p = p->suivant) {
-		printf("%c  %d\n", p->caractere, p->frequence);
+		printf("2-%c   %d\n", p->caractere, p->frequence);
 	}
 }
 
@@ -112,13 +112,18 @@ void deleteTwoFirstElements(elementListe* elemL) {
 	elem2 = elemL->suivant;
 	elemL = elemL->suivant->suivant;
 
+	elem1->suivant=NULL;
+	free(elem1->noeudIntermediaire);
 	free(elem1);
 	elem1 = NULL;
+
+	elem2->suivant = NULL;
+	free(elem2->noeudIntermediaire);
 	free(elem2);
 	elem2 = NULL;
 
 	for (p = elemL; p != NULL; p = p->suivant) {
-		printf("%c  %d\n", p->caractere, p->frequence);
+		printf("3-%c   %d\n", p->caractere, p->frequence);
 	}
 }
 
@@ -257,18 +262,20 @@ void huffman(FILE** file, int *intTab, char *charTab, float* tabProba, char* arc
 
 	/* Affichage tableau d'apparition*/
 	for (i = 0; i < tailleTab; i++) {
-		printf(" %c    %d\n", charTab[i], intTab[i]);
+		printf("1-%c   %d\n", charTab[i], intTab[i]);
 	}
 
 	/* Creation du tableau de probabilitees */
 	nbChar = sumTab(intTab, tailleTab);
 
 	tri(charTab, intTab, tailleTab);
+	printf("\n");
 
 	createChainedList(elemL, charTab, intTab, tailleTab);
+	printf("\n");
 
 	/* test*/
-	/*deleteTwoFirstElements(elemL);*/
+	deleteTwoFirstElements(elemL);
 
 	/*while (elemL->suivant != NULL) {
 	 insertNewNodeInChainedList(elemL);

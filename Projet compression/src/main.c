@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 	float* tabProba;
 
 	if (argc != 3) {
-		printf("##### Missing parameters");
+		printf("##### Missing parameters\n");
 		return 1;
 
 	} else {
@@ -31,13 +31,13 @@ int main(int argc, char *argv[]) {
 		UnComp = strcmp(argv[1], "-u");
 
 		if (Comp == 0) {
-			printf("##### Compression\n\n");
+			printf("##### Compression\n");
 			intTab = calloc(1, sizeof(int));
 			charTab = calloc(1, sizeof(char));
 			tabProba = calloc(1, sizeof(float));
 
 			if (openFile(argv[2], file) != 0) {
-				printf("Erreur d'ouverture du fichier");
+				printf("Erreur d'ouverture du fichier\n");
 				return -1;
 
 			}
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 			printf("##### UnCompression\n");
 
 		} else {
-			printf("!!!!! Wrong parameter");
+			printf("!!!!! Wrong parameter\n");
 		}
 	}
 	return 0;
