@@ -117,11 +117,20 @@ void deleteTwoFirstElements(elementListe** liste) {
 
 }
 
-void linkElementWithChaindList() {
+void linkElementWithChaindList(elementListe** liste, elementListe* element) {
+	int valueToAdd = element->frequence;
+	struct elementListe* a;
 
+	a = *liste;
+
+	while ((a->suivant->frequence <= valueToAdd) && (a->suivant != NULL)) {
+		a = a->suivant;
+	}
+	element->suivant = a->suivant;
+	a->suivant = element;
 }
 
-void insertNewNodeInChainedList(elementListe* elemL) {
+void insertNewNodeInChainedList(elementListe** elemL) {
 	int value;
 	struct elementListe* p;
 	struct elementListe* nouveau;
@@ -130,9 +139,9 @@ void insertNewNodeInChainedList(elementListe* elemL) {
 	struct noeud* noeudGauche = NULL;
 	struct noeud* noeudDroit = NULL;
 
-	p = elemL;
+	p = *elemL;
 	value = p->frequence + p->suivant->frequence;
-	nouveau = malloc(1 * sizeof(elementListe));
+	nouveau = calloc(1, sizeof(elementListe));
 	nouveau->frequence = value;
 	nouveau->caractere = '\0';
 	nouveau->suivant = NULL;
@@ -189,7 +198,7 @@ void insertNewNodeInChainedList(elementListe* elemL) {
 	linkElementWithChaindList(elemL, nouveau);
 
 	/* Suppression des 2 premiers elements avec un free*/
-	deleteTwoFirstElements(p);
+	deleteTwoFirstElements(elemL);
 
 }
 
@@ -237,7 +246,7 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	char* currentCode;
 
 	elementListe* elemL = NULL;
-	elementListe** p = &elemL;
+	elementListe** ptListe = &elemL;
 	elementListe* a = NULL;
 
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
@@ -259,7 +268,7 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	}
 	printf("\n");
 
-	/* Affichage tableau d'apparition*/
+	/* Affichage tableau d'apparition */
 	for (i = 0; i < tailleTab; i++) {
 		printf("1-%c   %d\n", charTab[i], intTab[i]);
 	}
@@ -267,25 +276,44 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	tri(charTab, intTab, tailleTab);
 
 	for (i = 0; i < tailleTab; i++) {
-		createChainedList(p, charTab[i], intTab[i]);
+		createChainedList(ptListe, charTab[i], intTab[i]);
 	}
 
-	/* Affichage liste chainée */
+	/* Affichage liste chainée triée */
 	printf("\n");
 
-	for (a = *p; a != NULL; a = a->suivant) {
+	for (a = *ptListe; a != NULL; a = a->suivant) {
 		printf("2-%c   %d\n", a->caractere, a->frequence);
 	}
 	printf("\n");
 
-	for (a = *p; a != NULL; a = a->suivant) {
+
+
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+	insertNewNodeInChainedList(ptListe);
+
+
+	/*while ((*ptListe)->suivant != NULL) {
+		insertNewNodeInChainedList(ptListe);
+	}*/
+
+	for (a = *ptListe; a != NULL; a = a->suivant) {
 		printf("3-%c   %d\n", a->caractere, a->frequence);
 	}
 	printf("\n");
-
-	/*while (elemL->suivant != NULL) {
-	 insertNewNodeInChainedList(elemL);
-	 }*/
 
 	/*tabChar = malloc(1 * sizeof(char));
 	 currentCode = malloc(1 * sizeof(char));
