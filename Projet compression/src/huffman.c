@@ -7,12 +7,8 @@
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
+#include<wchar.h>
 #include"general.h"
-
-typedef struct liste {
-	int nbElements;
-	struct elementListe* tete;
-} liste;
 
 typedef struct elementListe {
 	int frequence;
@@ -30,6 +26,9 @@ typedef struct noeud {
 	struct noeud *gauche_0;
 	struct noeud *droite_1;
 } noeud;
+
+char *code[256] = { 0 };
+char buf[1024];
 
 void openFileToCompress(char *path) {
 	FILE* fichier = NULL;
@@ -77,15 +76,6 @@ void createTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab) {
 		printf("tabProba[%d] = %f , tabInt[%d] = %d \n", i, tabProba[i], i,
 				tabInt[i]);
 	}
-}
-
-void createHuffmanTree() {
-	struct noeud racine;
-	struct noeud* test = &racine;
-
-	racine.droite_1 = test;
-	struct noeud* test2 = NULL;
-	test->droite_1 = test2;
 }
 
 void createChainedList(elementListe** elemL, char charToAdd, int intToAdd) {
@@ -144,7 +134,7 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 	value = p->frequence + p->suivant->frequence;
 	nouveau = calloc(1, sizeof(elementListe));
 	nouveau->frequence = value;
-	nouveau->caractere = '\0';
+	nouveau->caractere = L'\0';
 	nouveau->suivant = NULL;
 
 	noeudRacine = malloc(1 * sizeof(noeud));
@@ -189,14 +179,15 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 		noeudDroit = p->suivant->noeudIntermediaire;
 	}
 
-	noeudRacine->caractere = '\0';
+	noeudRacine->caractere = L'\0';
 	noeudRacine->gauche_0 = noeudGauche;
 	noeudRacine->droite_1 = noeudDroit;
 	/*}*/
 
 	nouveau->noeudIntermediaire = noeudRacine;
 
-	printf("caractère dans noeud : gauche : %c  droit : %c \n",noeudRacine->gauche_0->caractere,noeudRacine->droite_1->caractere);
+	printf("caractere dans noeud : gauche : %lc  droit : %lc \n",
+			noeudRacine->gauche_0->caractere, noeudRacine->droite_1->caractere);
 
 	/* Liaison de l'element nouveau avec la liste chainée*/
 	linkElementWithChaindList(elemL, nouveau);
@@ -206,40 +197,23 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 
 }
 
-/* non testé*/
-void visiteNoeud(noeud* huffmanTree, char* tabChar, char** tabHuffCode,
-		char* currentCode, int *tailleTab) {
+void postfixeHuffmanTree(noeud *n, char *s, int len) {
+	static char *out = buf;
+	int tailleCode = 0;
 
-	if (huffmanTree->caractere == '\0') {
-		free(huffmanTree);
-	} else {
-		tabChar = realloc(tabChar, *tailleTab * sizeof(char));
-		tabHuffCode = realloc(tabHuffCode, *tailleTab * sizeof(char*));
-
-		tabChar[*tailleTab] = huffmanTree->caractere;
-		tabHuffCode[*tailleTab] = currentCode;
-		printf("Visite noeud :  - %c\n",tabChar[*tailleTab]);
-		*tailleTab += 1;
+	if (n->caractere != '\0') {
+		s[len] = 0;
+		strcpy(out, s);
+		tailleCode = strlen(out);
+		code[n->caractere] = out;
+		out += len + 1;
+		return;
 	}
-}
 
-/* non testé */
-void infixeHuffmanTree(noeud* huffmanTree, char* tabChar, char** tabHuffCode,
-		char* currentCode, int *tailleTab) {
-
-	if ((huffmanTree->gauche_0) != NULL) {
-		currentCode = realloc(currentCode, 1 * sizeof(char));
-		strcat(currentCode, "0");
-		infixeHuffmanTree(huffmanTree->gauche_0, tabChar, tabHuffCode,
-				currentCode, tailleTab);
-	}
-	if ((huffmanTree->droite_1) != NULL) {
-		currentCode = realloc(currentCode, 1 * sizeof(char));
-		strcat(currentCode, "1");
-		infixeHuffmanTree(huffmanTree->droite_1, tabChar, tabHuffCode,
-				currentCode, tailleTab);
-	}
-	visiteNoeud(huffmanTree, tabChar, tabHuffCode, currentCode, tailleTab);
+	s[len] = '0';
+	postfixeHuffmanTree(n->gauche_0, s, len + 1);
+	s[len] = '1';
+	postfixeHuffmanTree(n->droite_1, s, len + 1);
 }
 
 void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
@@ -247,18 +221,15 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	int i = 0;
 	int positionChar = 0;
 	int tailleTab = 0;
-	int test=0;
-	int *tailleParcoursArbre = &test;
+	int test = 0;
 	char* tabChar;
-	char** tabHuffCode;
-	char* currentCode = "";
 
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
 	elementListe* a = NULL;
 
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
-	while ((c = fgetc(*file)) != EOF) {
+	while ((c = fgetwc(*file)) != WEOF ) {
 		printf("%c", c);
 
 		if (isInTab(c, charTab) == -1) {
@@ -273,6 +244,7 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 			positionChar = isInTab(c, charTab);
 			intTab[positionChar]++;
 		}
+		printf("123\n");
 	}
 	printf("\n");
 
@@ -305,15 +277,22 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	printf("\n");
 
 	tabChar = malloc(1 * sizeof(char*));
-	currentCode = malloc(1 * sizeof(char));
-	tabHuffCode = malloc(1 * sizeof(char*));
 
-	infixeHuffmanTree(elemL->noeudIntermediaire, tabChar, tabHuffCode,
-			currentCode,tailleParcoursArbre);
+	/* codage*/
+	postfixeHuffmanTree(elemL->noeudIntermediaire, tabChar, 0);
 
-	for (i = 0; i < tailleTab; i++) {
-		printf("tabChar : %c, tabHuffCode : %s\n", tabChar[i], tabHuffCode[i]);
+	/* affichage caractères codés */
+	for (i = 0; i < 256; i++) {
+		if (code[i])
+			printf("'%c': %s\n", i, code[i]);
 	}
+	/*
+	 postfixeHuffmanTree(elemL->noeudIntermediaire, tabChar, tabHuffCode,
+	 currentCode, tailleParcoursArbre);
+
+	 for (i = 0; i < tailleTab; i++) {
+	 printf("tabChar : %c, tabHuffCode : %s\n", tabChar[i], tabHuffCode[i]);
+	 }*/
 	/* free tout ça */
 
 	/* Creation de l'archive */

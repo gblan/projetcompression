@@ -29,13 +29,10 @@ void openFileToCompress(char *path);
 int isInTab(char c, char* charTab);
 int sumTab(int* tabInt, int tailleTab);
 void createTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab);
-void createHuffmanTree();
-void createChainedList(elementListe** elemL, char tabChar, int tabInt);
+void createChainedList(elementListe** elemL, char charToAdd, int intToAdd);
 void deleteTwoFirstElements(elementListe** elemL);
-void linkElementWithChaindList(elementListe* elemL, elementListe* element);
-void insertNewNodeInChainedList(elementListe* elemL);
-void visiteNoeud(noeud* huffmanTree, int* tabChar, char** tabHuffCode, char* currentCode, int *tailleTab);
-void infixeHuffmanTree(noeud* huffmanTree, char* tabChar, char** tabHuffCode, char* currentCode, int *tailleTab);
+void linkElementWithChaindList(elementListe** elemL, elementListe* element);
+void insertNewNodeInChainedList(elementListe** elemL);
+void postfixeHuffmanTree(noeud *n, char *s, int len);
 void huffman(FILE** file, int *intTab, char *charTab, char* archiveName);
-
 #endif /* HUFFMAN_H_ */
