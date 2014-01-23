@@ -123,11 +123,12 @@ void linkElementWithChaindList(elementListe** liste, elementListe* element) {
 
 	a = *liste;
 
-	while ((a->suivant->frequence <= valueToAdd) && (a->suivant != NULL)) {
+	while ((a->suivant != NULL) && (a->suivant->frequence <= valueToAdd)) {
 		a = a->suivant;
 	}
 	element->suivant = a->suivant;
 	a->suivant = element;
+
 }
 
 void insertNewNodeInChainedList(elementListe** elemL) {
@@ -135,9 +136,9 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 	struct elementListe* p;
 	struct elementListe* nouveau;
 
-	struct noeud* noeudRacine = NULL;
-	struct noeud* noeudGauche = NULL;
-	struct noeud* noeudDroit = NULL;
+	struct noeud* noeudRacine;
+	struct noeud* noeudGauche;
+	struct noeud* noeudDroit;
 
 	p = *elemL;
 	value = p->frequence + p->suivant->frequence;
@@ -145,6 +146,7 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 	nouveau->frequence = value;
 	nouveau->caractere = '\0';
 	nouveau->suivant = NULL;
+
 	noeudRacine = malloc(1 * sizeof(noeud));
 	noeudGauche = malloc(1 * sizeof(noeud));
 	noeudDroit = malloc(1 * sizeof(noeud));
@@ -152,48 +154,48 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 	/* on cherche le nombre de probas simillaires dans la liste chainée*/
 	/* et on ajoute a la fin des mêmes probas*/
 
-	if (p->frequence < value && p->suivant->frequence > value) {
-		/* Alors on insert à cet endroit */
+	/*if (p->frequence < value && p->suivant->frequence > value) {*/
+	/* Alors on insert à cet endroit */
 
-		if (p->noeudIntermediaire == NULL
-				&& p->suivant->noeudIntermediaire == NULL) {
-			/* INSERTION FACILE*/
-			noeudGauche->caractere = p->caractere;
-			noeudGauche->droite_1 = NULL;
-			noeudGauche->gauche_0 = NULL;
-			noeudDroit->caractere = p->suivant->caractere;
-			noeudDroit->droite_1 = NULL;
-			noeudDroit->gauche_0 = NULL;
+	if (p->noeudIntermediaire == NULL && p->suivant->noeudIntermediaire == NULL) {
+		/* INSERTION FACILE*/
+		noeudGauche->caractere = p->caractere;
+		noeudGauche->droite_1 = NULL;
+		noeudGauche->gauche_0 = NULL;
+		noeudDroit->caractere = p->suivant->caractere;
+		noeudDroit->droite_1 = NULL;
+		noeudDroit->gauche_0 = NULL;
 
-		} else if (p->noeudIntermediaire == NULL
-				&& p->suivant->noeudIntermediaire != NULL) {
-			/* INSERTION UN PEU DURE*/
-			noeudGauche->caractere = p->caractere;
-			noeudGauche->droite_1 = NULL;
-			noeudGauche->gauche_0 = NULL;
-			noeudDroit = p->suivant->noeudIntermediaire;
+	} else if (p->noeudIntermediaire == NULL
+			&& p->suivant->noeudIntermediaire != NULL) {
+		/* INSERTION UN PEU DURE*/
+		noeudGauche->caractere = p->caractere;
+		noeudGauche->droite_1 = NULL;
+		noeudGauche->gauche_0 = NULL;
+		noeudDroit = p->suivant->noeudIntermediaire;
 
-		} else if (p->noeudIntermediaire != NULL
-				&& p->suivant->noeudIntermediaire == NULL) {
-			/* INSERTION UN PEU DURE ENCORE*/
-			noeudGauche = p->noeudIntermediaire;
-			noeudDroit->caractere = p->suivant->caractere;
-			noeudDroit->droite_1 = NULL;
-			noeudDroit->gauche_0 = NULL;
+	} else if (p->noeudIntermediaire != NULL
+			&& p->suivant->noeudIntermediaire == NULL) {
+		/* INSERTION UN PEU DURE ENCORE*/
+		noeudGauche = p->noeudIntermediaire;
+		noeudDroit->caractere = p->suivant->caractere;
+		noeudDroit->droite_1 = NULL;
+		noeudDroit->gauche_0 = NULL;
 
-		} else if (p->noeudIntermediaire != NULL
-				&& p->suivant->noeudIntermediaire != NULL) {
-			/* INSERTION DIFFICILE */
-			noeudGauche = p->noeudIntermediaire;
-			noeudDroit = p->suivant->noeudIntermediaire;
-		}
-
-		noeudRacine->caractere = '\0';
-		noeudRacine->gauche_0 = noeudGauche;
-		noeudRacine->droite_1 = noeudDroit;
+	} else if (p->noeudIntermediaire != NULL
+			&& p->suivant->noeudIntermediaire != NULL) {
+		/* INSERTION DIFFICILE */
+		noeudGauche = p->noeudIntermediaire;
+		noeudDroit = p->suivant->noeudIntermediaire;
 	}
 
+	noeudRacine->caractere = '\0';
+	noeudRacine->gauche_0 = noeudGauche;
+	noeudRacine->droite_1 = noeudDroit;
+	/*}*/
+
 	nouveau->noeudIntermediaire = noeudRacine;
+
 	/* Liaison de l'element nouveau avec la liste chainée*/
 	linkElementWithChaindList(elemL, nouveau);
 
@@ -206,10 +208,12 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 void visiteNoeud(noeud* huffmanTree, char* tabChar, char** tabHuffCode,
 		char* currentCode, int tailleTab) {
 
-	tabChar = realloc(tabChar, tailleTab * sizeof(char));
-	tabHuffCode = realloc(tabHuffCode, tailleTab * sizeof(char*));
+	if (huffmanTree->caractere == '\0') {
+		free(huffmanTree);
+	} else {
+		tabChar = realloc(tabChar, tailleTab * sizeof(char));
+		tabHuffCode = realloc(tabHuffCode, tailleTab * sizeof(char*));
 
-	if (huffmanTree->caractere != '\0') {
 		tabChar[tailleTab] = huffmanTree->caractere;
 		tabHuffCode[tailleTab] = currentCode;
 		tailleTab++;
@@ -287,40 +291,25 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	}
 	printf("\n");
 
-
-
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-	insertNewNodeInChainedList(ptListe);
-
-
-	/*while ((*ptListe)->suivant != NULL) {
+	while ((*ptListe)->suivant != NULL) {
 		insertNewNodeInChainedList(ptListe);
-	}*/
+	}
 
 	for (a = *ptListe; a != NULL; a = a->suivant) {
 		printf("3-%c   %d\n", a->caractere, a->frequence);
 	}
 	printf("\n");
 
-	/*tabChar = malloc(1 * sizeof(char));
-	 currentCode = malloc(1 * sizeof(char));
-	 tabHuffCode = malloc(1 * sizeof(char*));*/
-	/*
-	 infixeHuffmanTree(elemL->noeudIntermediaire,tabChar, tabHuffCode, currentCode, 0);
-	 */
+	tabChar = malloc(1 * sizeof(char));
+	currentCode = malloc(1 * sizeof(char));
+	tabHuffCode = malloc(1 * sizeof(char*));
+
+	infixeHuffmanTree(elemL->noeudIntermediaire, tabChar, tabHuffCode,
+			currentCode, 0);
+
+	for (i = 0; i < tailleTab; i++) {
+		printf("tabChar : %c, tabHuffCode : %s\n", tabChar[i], tabHuffCode[i]);
+	}
 	/* free tout ça */
 
 	/* Creation de l'archive */
@@ -329,6 +318,7 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	 closeFile(ptArchive);*/
 
 	free(elemL);
+	printf("\n");
 	free(intTab);
 	intTab = NULL;
 	free(charTab);
