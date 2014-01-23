@@ -197,7 +197,7 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 
 }
 
-void postfixeHuffmanTree(noeud *n, char *s, int len) {
+void prefixeHuffmanTree(noeud *n, char *s, int len) {
 	static char *out = buf;
 	int tailleCode = 0;
 
@@ -211,25 +211,27 @@ void postfixeHuffmanTree(noeud *n, char *s, int len) {
 	}
 
 	s[len] = '0';
-	postfixeHuffmanTree(n->gauche_0, s, len + 1);
+	prefixeHuffmanTree(n->gauche_0, s, len + 1);
 	s[len] = '1';
-	postfixeHuffmanTree(n->droite_1, s, len + 1);
+	prefixeHuffmanTree(n->droite_1, s, len + 1);
 }
 
-void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
+void huffman(FILE** file, int *intTab, char *charTab, char* archiveName,
+		FILE** ptFileOutput, char* fileInputName) {
 	char c;
 	int i = 0;
 	int positionChar = 0;
 	int tailleTab = 0;
 	int test = 0;
 	char* tabChar;
+	char* fileOutputName;
 
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
 	elementListe* a = NULL;
 
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
-	while ((c = fgetwc(*file)) != WEOF ) {
+	while ((c = fgetwc(*file)) != WEOF) {
 		printf("%c", c);
 
 		if (isInTab(c, charTab) == -1) {
@@ -260,8 +262,6 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	}
 
 	/* Affichage liste chainée triée */
-	printf("\n");
-
 	for (a = *ptListe; a != NULL; a = a->suivant) {
 		printf("2-%c   %d\n", a->caractere, a->frequence);
 	}
@@ -270,30 +270,28 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName) {
 	while ((*ptListe)->suivant != NULL) {
 		insertNewNodeInChainedList(ptListe);
 	}
-
-	for (a = *ptListe; a != NULL; a = a->suivant) {
-		printf("3-%c   %d\n", a->caractere, a->frequence);
-	}
-	printf("\n");
+	/* La liste ne contient plus qu'un seul element qui contiend l'arbre entier */
 
 	tabChar = malloc(1 * sizeof(char*));
 
 	/* codage*/
-	postfixeHuffmanTree(elemL->noeudIntermediaire, tabChar, 0);
+	prefixeHuffmanTree(elemL->noeudIntermediaire, tabChar, 0);
 
 	/* affichage caractères codés */
 	for (i = 0; i < 256; i++) {
 		if (code[i])
 			printf("'%c': %s\n", i, code[i]);
 	}
-	/*
-	 postfixeHuffmanTree(elemL->noeudIntermediaire, tabChar, tabHuffCode,
-	 currentCode, tailleParcoursArbre);
 
-	 for (i = 0; i < tailleTab; i++) {
-	 printf("tabChar : %c, tabHuffCode : %s\n", tabChar[i], tabHuffCode[i]);
-	 }*/
-	/* free tout ça */
+	/*Ecriture de la taille de la table des fréquences */
+	fileOutputName = calloc((8+strlen(fileInputName)),sizeof(char));
+	fileOutputName = createBinaryFile(fileInputName, ptFileOutput, archiveName);
+
+	openFile(fileOutputName, ptFileOutput, "ab");
+	fwrite(&tailleTab, 2, 1, *ptFileOutput);
+
+	closeFile(ptFileOutput);
+
 
 	/* Creation de l'archive */
 	/*archive = createFile(archiveName);

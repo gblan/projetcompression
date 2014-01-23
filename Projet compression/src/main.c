@@ -42,10 +42,8 @@ int main(int argc, char *argv[]) {
 
 			}
 
-			huffman(ptFileInput, intTab, charTab, archiveName);
+			huffman(ptFileInput, intTab, charTab, archiveName, ptFileOutput, argv[2]);
 
-			/*createBinaryFile(argv[2],ptFileOutput, archiveName);
-			 */
 			closeFile(ptFileInput);
 
 		} else if (UnComp == 0) {
