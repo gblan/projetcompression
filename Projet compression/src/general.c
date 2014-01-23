@@ -148,13 +148,3 @@ char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName) {
 
 	return archiveName;
 }
-
-void writeBinary(char* huffmanCode, char* tabChar, FILE** ptBinaryFile,
-		char* archiveName) {
-	/* d'abord on met la taille du dictionnaire de données (char, huff)*/
-	/* puis le dictionnaire lui même*/
-	/* puis on affiche le code de huffman*/
-
-	/*fwrite( &c , sizeof(char) , 2 , *ptBinaryFile);
-	 */
-}

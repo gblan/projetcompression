@@ -194,13 +194,13 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 
 void prefixeHuffmanTree(noeud *n, char *s, int len) {
 	static char *out = buf;
-	int tailleCode = 0;
+	/*int tailleCode = 0;*/
 
 	if (n->caractere != '\0') {
 		s[len] = 0;
 		strcpy(out, s);
-		tailleCode = strlen(out);
-		code[n->caractere] = out;
+		/*tailleCode = strlen(out);*/
+		code[(int)n->caractere] = out;
 		out += len + 1;
 		return;
 	}
@@ -217,7 +217,6 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName,
 	int i = 0;
 	int positionChar = 0;
 	int tailleTab = 0;
-	int test = 0;
 	char* tabChar;
 	char* fileOutputName;
 
