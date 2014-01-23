@@ -90,20 +90,15 @@ void createChainedList(elementListe** elemL, char charToAdd, int intToAdd) {
 }
 
 void deleteTwoFirstElements(elementListe** liste) {
-	struct elementListe* elem1;
-	struct elementListe* elem2;
-
-	elem1 = *liste;
-	*liste = (*liste)->suivant;
-	elem1->suivant = NULL;
-	free(elem1);
-	elem1 = NULL;
-
-	elem2 = *liste;
-	*liste = (*liste)->suivant;
-	elem2->suivant = NULL;
-	free(elem2);
-	elem2 = NULL;
+	struct elementListe* elem;
+	int i;
+	for (i = 0; i < 2; i++) {
+		elem = *liste;
+		*liste = (*liste)->suivant;
+		elem->suivant = NULL;
+		free(elem);
+		elem = NULL;
+	}
 
 }
 
@@ -283,14 +278,22 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName,
 	}
 
 	/*Ecriture de la taille de la table des fréquences */
-	fileOutputName = calloc((8+strlen(fileInputName)),sizeof(char));
+	fileOutputName = calloc((8 + strlen(fileInputName)), sizeof(char));
 	fileOutputName = createBinaryFile(fileInputName, ptFileOutput, archiveName);
 
 	openFile(fileOutputName, ptFileOutput, "ab");
+	/*ECRITURE DANS LE FICHIER CIBLE*/
 	fwrite(&tailleTab, 2, 1, *ptFileOutput);
+	while ((c = fgetwc(*file)) != WEOF) {
+
+		for (i = 0; i < tailleTab; i++) {
+			if (c == (char) i) {
+				fwrite(&code[i], 1, 1, *ptFileOutput);
+			}
+		}
+	}
 
 	closeFile(ptFileOutput);
-
 
 	/* Creation de l'archive */
 	/*archive = createFile(archiveName);
