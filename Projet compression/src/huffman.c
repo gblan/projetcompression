@@ -225,7 +225,7 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName,
 	elementListe* a = NULL;
 
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
-	while ((c = fgetwc(*file)) != WEOF) {
+	while ((c = fgetc(*file)) != EOF) {
 		printf("%c", c);
 
 		if (isInTab(c, charTab) == -1) {
@@ -288,7 +288,7 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName,
 	/* pointeur sur le début du gichier*/
 	fseek(*file, 0, SEEK_SET);
 
-	while ((c = fgetwc(*file)) != WEOF) {
+	while ((c = fgetc(*file)) != EOF) {
 
 		for (i = 0; i < 256; i++) {
 			if (c == (char) i) {
