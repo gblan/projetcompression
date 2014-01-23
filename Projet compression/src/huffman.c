@@ -283,10 +283,15 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName,
 
 	openFile(fileOutputName, ptFileOutput, "ab");
 	/*ECRITURE DANS LE FICHIER CIBLE*/
+
 	fwrite(&tailleTab, 2, 1, *ptFileOutput);
+
+	/* pointeur sur le début du gichier*/
+	fseek(*file, 0, SEEK_SET);
+
 	while ((c = fgetwc(*file)) != WEOF) {
 
-		for (i = 0; i < tailleTab; i++) {
+		for (i = 0; i < 256; i++) {
 			if (c == (char) i) {
 				fwrite(&code[i], 1, 1, *ptFileOutput);
 			}
