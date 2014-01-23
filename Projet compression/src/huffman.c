@@ -246,7 +246,6 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName,
 			positionChar = isInTab(c, charTab);
 			intTab[positionChar]++;
 		}
-		printf("123\n");
 	}
 	printf("\n");
 
