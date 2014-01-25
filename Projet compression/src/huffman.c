@@ -209,8 +209,18 @@ void prefixeHuffmanTree(noeud *n, char *s, int len) {
 	prefixeHuffmanTree(n->gauche_0, s, len + 1);
 	s[len] = '1';
 	prefixeHuffmanTree(n->droite_1, s, len + 1);
+}
 
-	n = NULL;
+void freeHuffmanTree(noeud *n) {
+
+	if(n->gauche_0 != NULL){
+		freeHuffmanTree(n->gauche_0);
+	}
+	if(n->droite_1 != NULL){
+		freeHuffmanTree(n->droite_1);
+	}
+	n->droite_1=NULL;
+	n->gauche_0=NULL;
 	free(n);
 }
 
@@ -276,7 +286,6 @@ void huffman(FILE** file, char* archiveName, FILE** ptFileOutput, char* fileInpu
 
 	/* codage*/
 	prefixeHuffmanTree(elemL->noeudIntermediaire, tabChar, 0);
-
 	/* affichage caractères codés */
 	for (i = 0; i < 256; i++) {
 		if (code[i])
@@ -313,6 +322,7 @@ void huffman(FILE** file, char* archiveName, FILE** ptFileOutput, char* fileInpu
 	 writeFile(ptArchive,"CONTENU BINAIRE");
 	 closeFile(ptArchive);*/
 
+	freeHuffmanTree(elemL->noeudIntermediaire);
 	free(elemL);
 	printf("\n");
 	free(intTab);
@@ -325,4 +335,5 @@ void huffman(FILE** file, char* archiveName, FILE** ptFileOutput, char* fileInpu
 	fileOutputName = NULL;
 	free(tabChar);
 	tabChar = NULL;
+
 }

@@ -34,5 +34,6 @@ void deleteTwoFirstElements(elementListe** elemL);
 void linkElementWithChaindList(elementListe** elemL, elementListe* element);
 void insertNewNodeInChainedList(elementListe** elemL);
 void prefixeHuffmanTree(noeud *n, char *s, int len);
+void freeHuffmanTree(noeud *n);
 void huffman(FILE** file, char* archiveName, FILE** ptFileOutput, char* fileInputName);
 #endif /* HUFFMAN_H_ */
