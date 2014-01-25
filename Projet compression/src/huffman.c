@@ -27,7 +27,7 @@ typedef struct noeud {
 	struct noeud *droite_1;
 } noeud;
 
-char *code[256] = { 0 };
+unsigned char *code[256] = { 0 };
 char buf[1024];
 
 void openFileToCompress(char *path) {
@@ -209,20 +209,27 @@ void prefixeHuffmanTree(noeud *n, char *s, int len) {
 	prefixeHuffmanTree(n->gauche_0, s, len + 1);
 	s[len] = '1';
 	prefixeHuffmanTree(n->droite_1, s, len + 1);
+
+	n = NULL;
+	free(n);
 }
 
-void huffman(FILE** file, int *intTab, char *charTab, char* archiveName,
-		FILE** ptFileOutput, char* fileInputName) {
+void huffman(FILE** file, char* archiveName, FILE** ptFileOutput, char* fileInputName) {
 	char c;
 	int i = 0;
 	int positionChar = 0;
 	int tailleTab = 0;
 	char* tabChar;
 	char* fileOutputName;
+	int* intTab;
+	char* charTab;
 
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
 	elementListe* a = NULL;
+
+	intTab = calloc(1, sizeof(int));
+	charTab = calloc(1, sizeof(char));
 
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
 	while ((c = fgetc(*file)) != EOF) {
@@ -292,6 +299,8 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName,
 
 		for (i = 0; i < 256; i++) {
 			if (c == (char) i) {
+				/*fputc(code[i], *ptFileOutput);*/
+
 				fwrite(&code[i], 1, 1, *ptFileOutput);
 			}
 		}
@@ -310,5 +319,10 @@ void huffman(FILE** file, int *intTab, char *charTab, char* archiveName,
 	intTab = NULL;
 	free(charTab);
 	charTab = NULL;
-
+	free(archiveName);
+	archiveName = NULL;
+	free(fileOutputName);
+	fileOutputName = NULL;
+	free(tabChar);
+	tabChar = NULL;
 }

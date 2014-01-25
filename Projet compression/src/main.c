@@ -19,8 +19,7 @@ int main(int argc, char *argv[]) {
 	FILE** ptFileInput = &fileInput;
 	FILE* fileOutput = NULL;
 	FILE** ptFileOutput = &fileOutput;
-	int* intTab;
-	char* charTab;
+
 	char* archiveName = NULL;
 
 	if (argc != 3) {
@@ -33,21 +32,18 @@ int main(int argc, char *argv[]) {
 
 		if (Comp == 0) {
 			printf("##### Compression\n");
-			intTab = calloc(1, sizeof(int));
-			charTab = calloc(1, sizeof(char));
 
 			if (openFile(argv[2], ptFileInput, "r+") != 0) {
 				printf("Erreur d'ouverture du fichier\n");
 				return -1;
-
 			}
 
-			huffman(ptFileInput, intTab, charTab, archiveName, ptFileOutput, argv[2]);
+			huffman(ptFileInput, archiveName, ptFileOutput, argv[2]);
 
 			closeFile(ptFileInput);
 
 		} else if (UnComp == 0) {
-			printf("##### UnCompression\n");
+			printf("##### DeCompression\n");
 
 		} else {
 			printf("!!!!! Wrong parameter\n");
