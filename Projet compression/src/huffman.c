@@ -27,7 +27,7 @@ typedef struct noeud {
 	struct noeud *droite_1;
 } noeud;
 
-unsigned char *code[256] = { 0 };
+const char *code[256] = { 0 };
 char buf[1024];
 
 void openFileToCompress(char *path) {
