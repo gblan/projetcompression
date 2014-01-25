@@ -224,7 +224,7 @@ void freeHuffmanTree(noeud *n) {
 	free(n);
 }
 
-void huffman(FILE** file, char* archiveName, FILE** ptFileOutput, char* fileInputName) {
+void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char c;
 	int i = 0;
 	int positionChar = 0;
@@ -233,6 +233,7 @@ void huffman(FILE** file, char* archiveName, FILE** ptFileOutput, char* fileInpu
 	char* fileOutputName;
 	int* intTab;
 	char* charTab;
+	char* archiveName = NULL;
 
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;

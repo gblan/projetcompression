@@ -20,7 +20,6 @@ int main(int argc, char *argv[]) {
 	FILE* fileOutput = NULL;
 	FILE** ptFileOutput = &fileOutput;
 
-	char* archiveName = NULL;
 
 	if (argc != 3) {
 		printf("##### Missing parameters\n");
@@ -38,7 +37,7 @@ int main(int argc, char *argv[]) {
 				return -1;
 			}
 
-			huffman(ptFileInput, archiveName, ptFileOutput, argv[2]);
+			huffman(ptFileInput, ptFileOutput, argv[2]);
 
 			closeFile(ptFileInput);
 
