@@ -82,6 +82,10 @@ void createChainedList(elementListe** elemL, char charToAdd, int intToAdd) {
 	struct elementListe* nouveau;
 
 	nouveau = calloc(1, sizeof(elementListe));
+	if(nouveau == NULL){
+		printf("Erreur d'allocation nouveau.\n");
+		exit(-1);
+	}
 	nouveau->caractere = charToAdd;
 	nouveau->frequence = intToAdd;
 	nouveau->suivant = *elemL;
@@ -128,6 +132,10 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 	p = *elemL;
 	value = p->frequence + p->suivant->frequence;
 	nouveau = calloc(1, sizeof(elementListe));
+	if(nouveau == NULL){
+		printf("Erreur d'allocation nouveau noeud.\n");
+		exit(-1);
+	}
 	nouveau->frequence = value;
 	nouveau->caractere = L'\0';
 	nouveau->suivant = NULL;
@@ -135,6 +143,10 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 	noeudRacine = malloc(1 * sizeof(noeud));
 	noeudGauche = malloc(1 * sizeof(noeud));
 	noeudDroit = malloc(1 * sizeof(noeud));
+	if((noeudRacine == NULL) || (noeudGauche == NULL) || (noeudDroit == NULL)){
+		printf("Erreur d'allocation construction arbre.\n");
+		exit(-1);
+	}
 
 	/* on cherche le nombre de probas simillaires dans la liste chainée*/
 	/* et on ajoute a la fin des mêmes probas*/
@@ -242,6 +254,11 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	intTab = calloc(1, sizeof(int));
 	charTab = calloc(1, sizeof(char));
 
+	if((intTab == NULL) || (charTab == NULL)){
+		printf("Erreur d'allocation intTab ou  charTab.\n");
+		exit(-1);
+	}
+
 	/* Vérifier la taille du fichier avant de l'ouvrir*/
 	while ((c = fgetc(*file)) != EOF) {
 		printf("%c", c);
@@ -249,6 +266,10 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		if (isInTab(c, charTab) == -1) {
 			intTab = realloc(intTab, sizeof(int) * tailleTab + 1);
 			charTab = realloc(charTab, sizeof(char) * tailleTab + 1);
+			if((intTab == NULL) || (charTab == NULL)){
+				printf("Erreur REALLOC intTab ou  charTab.\n");
+				exit(-1);
+			}
 
 			intTab[tailleTab] = 1;
 			charTab[tailleTab] = c;
@@ -283,8 +304,11 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 	/* La liste ne contient plus qu'un seul element qui contiend l'arbre entier */
 
-	tabChar = malloc(1 * sizeof(char*));
-
+	tabChar = calloc(1,sizeof(char*));
+	if(tabChar == NULL){
+		printf("Erreur d'allocation tabChar.\n");
+		exit(-1);
+	}
 	/* codage*/
 	prefixeHuffmanTree(elemL->noeudIntermediaire, tabChar, 0);
 	/* affichage caractères codés */
@@ -295,6 +319,11 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	/*Ecriture de la taille de la table des fréquences */
 	fileOutputName = calloc((8 + strlen(fileInputName)), sizeof(char));
+	if(fileOutputName == NULL){
+		printf("Erreur d'allocation fileOutputName.\n");
+		exit(-1);
+	}
+
 	fileOutputName = createBinaryFile(fileInputName, ptFileOutput, archiveName);
 
 	openFile(fileOutputName, ptFileOutput, "ab");
@@ -302,7 +331,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	fwrite(&tailleTab, 2, 1, *ptFileOutput);
 
-	/* pointeur sur le début du gichier*/
+	/* pointeur sur le début du fichier*/
 	fseek(*file, 0, SEEK_SET);
 
 	while ((c = fgetc(*file)) != EOF) {

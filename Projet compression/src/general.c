@@ -141,6 +141,10 @@ char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName) {
 
 	longueurNomFichier = strlen(fileName);
 	archiveName = malloc((longueurNomFichier + 8) * sizeof(char));
+	if(archiveName == NULL){
+		printf("Erreur d'allocation archiveName.\n");
+		exit(-1);
+	}
 	strcat(archiveName, fileName);
 	strcat(archiveName, ".huffman");
 	openFile(archiveName, ptFileOutput, "ab");

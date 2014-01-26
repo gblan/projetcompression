@@ -22,7 +22,8 @@ int main(int argc, char *argv[]) {
 
 
 	if (argc != 3) {
-		printf("##### Missing parameters\n");
+		printf("##### Nombre de parametres incorrect\n");
+		printf("##### Ecrire de la forme : nomprogramme -c/-d nomdufichier\n");
 		return 1;
 
 	} else {
@@ -45,7 +46,8 @@ int main(int argc, char *argv[]) {
 			printf("##### DeCompression\n");
 
 		} else {
-			printf("!!!!! Wrong parameter\n");
+			printf("!!!!! Mauvais parametres,\n");
+			printf("##### Ecrire de la forme : nomprogramme -c/-d nomdufichier\n");
 		}
 	}
 	return 0;
