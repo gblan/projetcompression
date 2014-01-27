@@ -82,7 +82,7 @@ void createChainedList(elementListe** elemL, char charToAdd, int intToAdd) {
 	struct elementListe* nouveau;
 
 	nouveau = calloc(1, sizeof(elementListe));
-	if(nouveau == NULL){
+	if (nouveau == NULL) {
 		printf("Erreur d'allocation nouveau.\n");
 		exit(-1);
 	}
@@ -132,7 +132,7 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 	p = *elemL;
 	value = p->frequence + p->suivant->frequence;
 	nouveau = calloc(1, sizeof(elementListe));
-	if(nouveau == NULL){
+	if (nouveau == NULL) {
 		printf("Erreur d'allocation nouveau noeud.\n");
 		exit(-1);
 	}
@@ -143,7 +143,8 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 	noeudRacine = malloc(1 * sizeof(noeud));
 	noeudGauche = malloc(1 * sizeof(noeud));
 	noeudDroit = malloc(1 * sizeof(noeud));
-	if((noeudRacine == NULL) || (noeudGauche == NULL) || (noeudDroit == NULL)){
+	if ((noeudRacine == NULL) || (noeudGauche == NULL)
+			|| (noeudDroit == NULL)) {
 		printf("Erreur d'allocation construction arbre.\n");
 		exit(-1);
 	}
@@ -212,7 +213,7 @@ void prefixeHuffmanTree(noeud *n, char *s, int len) {
 		s[len] = 0;
 		strcpy(out, s);
 		/*tailleCode = strlen(out);*/
-		code[(int)n->caractere] = out;
+		code[(int) n->caractere] = out;
 		out += len + 1;
 		return;
 	}
@@ -225,14 +226,14 @@ void prefixeHuffmanTree(noeud *n, char *s, int len) {
 
 void freeHuffmanTree(noeud *n) {
 
-	if(n->gauche_0 != NULL){
+	if (n->gauche_0 != NULL) {
 		freeHuffmanTree(n->gauche_0);
 	}
-	if(n->droite_1 != NULL){
+	if (n->droite_1 != NULL) {
 		freeHuffmanTree(n->droite_1);
 	}
-	n->droite_1=NULL;
-	n->gauche_0=NULL;
+	n->droite_1 = NULL;
+	n->gauche_0 = NULL;
 	free(n);
 }
 
@@ -241,12 +242,15 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	int i = 0;
 	int positionChar = 0;
 	int tailleTab = 0;
+	int tailleCode = 0;
+	int currentChar = 0;
 	char* tabChar;
 	char* fileOutputName;
 	int* intTab;
 	char* charTab;
 	char* archiveName = NULL;
-
+	char* bufferCode;
+	char charTemp[8];
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
 	elementListe* a = NULL;
@@ -254,7 +258,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	intTab = calloc(1, sizeof(int));
 	charTab = calloc(1, sizeof(char));
 
-	if((intTab == NULL) || (charTab == NULL)){
+	if ((intTab == NULL) || (charTab == NULL)) {
 		printf("Erreur d'allocation intTab ou  charTab.\n");
 		exit(-1);
 	}
@@ -266,7 +270,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		if (isInTab(c, charTab) == -1) {
 			intTab = realloc(intTab, sizeof(int) * tailleTab + 1);
 			charTab = realloc(charTab, sizeof(char) * tailleTab + 1);
-			if((intTab == NULL) || (charTab == NULL)){
+			if ((intTab == NULL) || (charTab == NULL)) {
 				printf("Erreur REALLOC intTab ou  charTab.\n");
 				exit(-1);
 			}
@@ -304,8 +308,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 	/* La liste ne contient plus qu'un seul element qui contiend l'arbre entier */
 
-	tabChar = calloc(1,sizeof(char*));
-	if(tabChar == NULL){
+	tabChar = calloc(1, sizeof(char*));
+	if (tabChar == NULL) {
 		printf("Erreur d'allocation tabChar.\n");
 		exit(-1);
 	}
@@ -319,39 +323,69 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	/*Ecriture de la taille de la table des fréquences */
 	fileOutputName = calloc((8 + strlen(fileInputName)), sizeof(char));
-	if(fileOutputName == NULL){
+	if (fileOutputName == NULL) {
 		printf("Erreur d'allocation fileOutputName.\n");
 		exit(-1);
 	}
 
 	fileOutputName = createBinaryFile(fileInputName, ptFileOutput, archiveName);
 
-	openFile(fileOutputName, ptFileOutput, "ab");
+	openFile(fileOutputName, ptFileOutput, "wb+");
 	/*ECRITURE DANS LE FICHIER CIBLE*/
 
 	fwrite(&tailleTab, 2, 1, *ptFileOutput);
 
+	/* Ecriture du dictionnaire de donnees */
+
 	/* pointeur sur le début du fichier*/
 	fseek(*file, 0, SEEK_SET);
+
+	bufferCode = calloc(1, sizeof(char));
 
 	while ((c = fgetc(*file)) != EOF) {
 
 		for (i = 0; i < 256; i++) {
 			if (c == (char) i) {
 				/*fputc(code[i], *ptFileOutput);*/
+				/*printf("%s",code[i]);*/
+				tailleCode = strlen(code[i]) + strlen(bufferCode) + 1;
 
-				fwrite(&code[i], 1, 1, *ptFileOutput);
+				bufferCode = realloc(bufferCode, tailleCode * sizeof(char));
+				if (bufferCode == NULL) {
+					printf("PROBLEM\n");
+				}
+				strcat(bufferCode, code[i]);
+
+				/*fwrite(&code[i], tailleCode, 1, *ptFileOutput);*/
 			}
 		}
+	}
+	printf("\n");
+	printf("%s\n", bufferCode);
+
+	tailleCode = strlen(bufferCode);
+	int nboctet = tailleCode / 8;
+
+	for (i = 0; i < tailleCode; i += 8) {
+		/*strncpy(charTemp, bufferCode[i], 8);*/
+		currentChar = getBinaryValue(charTemp);
+		fwrite(&currentChar, 1, 1, *ptFileOutput);
+	}
+	i = nboctet * 8;
+	/* si il reste des octets */
+	if (i != tailleCode) {
+		while (bufferCode[i] != '\0') {
+			/*strcat(charTemp,bufferCode[i]);*/
+			i++;
+		}
+		currentChar = getBinaryValue(charTemp);
+		fwrite(&currentChar, 1, 1, *ptFileOutput);
+
 	}
 
 	closeFile(ptFileOutput);
 
-	/* Creation de l'archive */
-	/*archive = createFile(archiveName);
-	 writeFile(ptArchive,"CONTENU BINAIRE");
-	 closeFile(ptArchive);*/
-
+	free(bufferCode);
 	freeHuffmanTree(elemL->noeudIntermediaire);
 	free(elemL);
 	printf("\n");

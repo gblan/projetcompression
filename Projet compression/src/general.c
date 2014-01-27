@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #define TAILLE_MAX 1000
 
 char* checkFileName(char* fileName, int longueurChaine) {
@@ -141,7 +142,7 @@ char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName) {
 
 	longueurNomFichier = strlen(fileName);
 	archiveName = malloc((longueurNomFichier + 8) * sizeof(char));
-	if(archiveName == NULL){
+	if (archiveName == NULL) {
 		printf("Erreur d'allocation archiveName.\n");
 		exit(-1);
 	}
@@ -151,4 +152,18 @@ char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName) {
 	closeFile(ptFileOutput);
 
 	return archiveName;
+}
+
+int getBinaryValue(char subString[8]) {
+	int binary = atoi(subString);
+
+	int result = 0, i = 0, rem;
+	while (binary != 0) {
+		rem = binary % 10;
+		binary /= 10;
+		result += rem * pow(2, i);
+		++i;
+	}
+	return result;
+
 }
