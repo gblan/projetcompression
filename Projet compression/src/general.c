@@ -168,9 +168,9 @@ int binaryToDecimal(char subString[8]) {
 }
 
 void decimalToBinary(int decimal, char* octet) {
-
 	int rem, i = 1, binary = 0, charlen;
 	char tmp[8];
+
 	while (decimal != 0) {
 		rem = decimal % 2;
 		decimal /= 2;
@@ -183,7 +183,6 @@ void decimalToBinary(int decimal, char* octet) {
 
 	/*on ajoute des 0 pour completer l'octet*/
 	while (charlen != 8) {
-
 		strcpy(tmp, octet);
 		for (i = 0; i < (8-charlen); i++) {
 			octet[i] = '0';

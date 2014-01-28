@@ -347,17 +347,13 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 		for (i = 0; i < 256; i++) {
 			if (c == (char) i) {
-				/*fputc(code[i], *ptFileOutput);*/
-				/*printf("%s",code[i]);*/
-				tailleCode = strlen(code[i]) + strlen(bufferCode) + 1;
 
+				tailleCode = strlen(code[i]) + strlen(bufferCode) + 1;
 				bufferCode = realloc(bufferCode, tailleCode * sizeof(char));
 				if (bufferCode == NULL) {
 					printf("PROBLEM\n");
 				}
 				strcat(bufferCode, code[i]);
-
-				/*fwrite(&code[i], tailleCode, 1, *ptFileOutput);*/
 			}
 		}
 	}
@@ -365,34 +361,29 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	/*printf("%s\n", bufferCode);*/
 
 	tailleCode = strlen(bufferCode);
-
 	int nboctet = tailleCode / 8;
 
 	for (i = 0; i < nboctet; i++) {
 		strncpy(charTemp, bufferCode, 8);
 		currentChar = binaryToDecimal(charTemp);
-		/*printf("currentChar : %c\n", currentChar);*/
 		fwrite(&currentChar, 1, 1, *ptFileOutput);
 		bufferCode += 8;
 	}
 
 	i = nboctet * 8;
 	/* TODO si il reste des octets */
-	/*if (i != tailleCode) {
-	 while (bufferCode[i] != '\0') {
-	 i++;
-	 }
-	 currentChar = binaryToDecimal(charTemp);
-	 fwrite(&currentChar, 1, 1, *ptFileOutput);
-
-	 }*/
+	if (i != tailleCode) {
+		strcpy(charTemp,bufferCode);
+		currentChar = binaryToDecimal(charTemp);
+		fwrite(&currentChar, 1, 1, *ptFileOutput);
+	}
 
 	closeFile(ptFileOutput);
 
 	/*TODO CHECK */
-	if (bufferCode != NULL) {
-		/*free(bufferCode);*/
-	}
+	/*if (bufferCode != NULL) {
+		free(bufferCode);
+	}*/
 
 	freeHuffmanTree(elemL->noeudIntermediaire);
 	free(elemL);

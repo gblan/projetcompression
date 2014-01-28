@@ -14,16 +14,17 @@
 
 int main(int argc, char *argv[]) {
 	int Comp = 0;
+	int i;
 	int UnComp = 0;
 	FILE* fileInput = NULL;
 	FILE** ptFileInput = &fileInput;
 	FILE* fileOutput = NULL;
 	FILE** ptFileOutput = &fileOutput;
 
-
 	if (argc != 3) {
 		printf("##### Nombre de parametres incorrect\n");
-		printf("##### Ecrire de la forme : nomprogramme c/d nomdufichiera(de)compresser\n");
+		printf(
+				"##### Ecrire de la forme : nomprogramme c/d nomdufichiera(de)compresser\n");
 		return 1;
 
 	} else {
@@ -47,7 +48,8 @@ int main(int argc, char *argv[]) {
 
 		} else {
 			printf("!!!!! Mauvais parametres,\n");
-			printf("##### Ecrire de la forme : nomprogramme -c/-d nomdufichier\n");
+			printf(
+					"##### Ecrire de la forme : nomprogramme c/d nomdufichier\n");
 		}
 	}
 	return 0;
