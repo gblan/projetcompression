@@ -342,6 +342,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	bufferCode = calloc(1, sizeof(char));
 
+	printf("Compression en cours, veuillez patienter . . .\n");
 	while ((c = fgetc(*file)) != EOF) {
 
 		for (i = 0; i < 256; i++) {
@@ -361,7 +362,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		}
 	}
 	printf("\n");
-	printf("%s\n", bufferCode);
+	/*printf("%s\n", bufferCode);*/
 
 	tailleCode = strlen(bufferCode);
 
@@ -369,8 +370,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	for (i = 0; i < nboctet; i++) {
 		strncpy(charTemp, bufferCode, 8);
-		currentChar = getBinaryValue(charTemp);
-		printf("currentChar : %c\n", currentChar);
+		currentChar = binaryToDecimal(charTemp);
+		/*printf("currentChar : %c\n", currentChar);*/
 		fwrite(&currentChar, 1, 1, *ptFileOutput);
 		bufferCode += 8;
 	}
@@ -381,7 +382,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	 while (bufferCode[i] != '\0') {
 	 i++;
 	 }
-	 currentChar = getBinaryValue(charTemp);
+	 currentChar = binaryToDecimal(charTemp);
 	 fwrite(&currentChar, 1, 1, *ptFileOutput);
 
 	 }*/

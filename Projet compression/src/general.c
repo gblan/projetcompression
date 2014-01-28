@@ -154,10 +154,10 @@ char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName) {
 	return archiveName;
 }
 
-int getBinaryValue(char subString[8]) {
+int binaryToDecimal(char subString[8]) {
 	int binary = atoi(subString);
-
 	int result = 0, i = 0, rem;
+
 	while (binary != 0) {
 		rem = binary % 10;
 		binary /= 10;
@@ -165,5 +165,33 @@ int getBinaryValue(char subString[8]) {
 		++i;
 	}
 	return result;
+}
 
+void decimalToBinary(int decimal, char* octet) {
+
+	int rem, i = 1, binary = 0, charlen;
+	char tmp[8];
+	while (decimal != 0) {
+		rem = decimal % 2;
+		decimal /= 2;
+		binary += rem * i;
+		i *= 10;
+	}
+
+	sprintf(octet, "%d", binary);
+	charlen = strlen(octet);
+
+	/*on ajoute des 0 pour completer l'octet*/
+	while (charlen != 8) {
+
+		strcpy(tmp, octet);
+		for (i = 0; i < (8-charlen); i++) {
+			octet[i] = '0';
+		}
+		for (i = (8-charlen); i < 8; i++) {
+			octet[i] = '\0';
+		}
+		strcat(octet, tmp);
+		charlen = strlen(octet);
+	}
 }
