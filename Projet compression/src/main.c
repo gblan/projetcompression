@@ -23,12 +23,12 @@ int main(int argc, char *argv[]) {
 
 	if (argc != 3) {
 		printf("##### Nombre de parametres incorrect\n");
-		printf("##### Ecrire de la forme : nomprogramme -c/-d nomdufichier\n");
+		printf("##### Ecrire de la forme : nomprogramme c/d nomdufichiera(de)compresser\n");
 		return 1;
 
 	} else {
-		Comp = strcmp(argv[1], "-c");
-		UnComp = strcmp(argv[1], "-u");
+		Comp = strcmp(argv[1], "c");
+		UnComp = strcmp(argv[1], "u");
 
 		if (Comp == 0) {
 			printf("##### Compression\n");
