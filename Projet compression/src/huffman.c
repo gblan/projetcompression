@@ -384,7 +384,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	/*if (bufferCode != NULL) {
 		free(bufferCode);
 	}*/
-
+	printf("fileInputName : %s, fileOutputName : %s\n",fileInputName,fileOutputName);
+	printf("Taux de compression : %f, / %f \n",file_size(fileInputName),file_size(fileOutputName));
 	freeHuffmanTree(elemL->noeudIntermediaire);
 	free(elemL);
 	printf("\n");

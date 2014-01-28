@@ -184,13 +184,29 @@ void decimalToBinary(int decimal, char* octet) {
 	/*on ajoute des 0 pour completer l'octet*/
 	while (charlen != 8) {
 		strcpy(tmp, octet);
-		for (i = 0; i < (8-charlen); i++) {
+		for (i = 0; i < (8 - charlen); i++) {
 			octet[i] = '0';
 		}
-		for (i = (8-charlen); i < 8; i++) {
+		for (i = (8 - charlen); i < 8; i++) {
 			octet[i] = '\0';
 		}
 		strcat(octet, tmp);
 		charlen = strlen(octet);
 	}
+}
+
+long file_size(char *filename) {
+	FILE *file = fopen(filename, "r");
+	long ret;
+
+	if (file == NULL) {
+		return -1;
+	}
+
+	/*On place le curseur à la fin*/
+	fseek(file, 0, SEEK_END);
+	/*On récupére la position courante*/
+	ret = ftell(file);
+	fclose(file);
+	return ret;
 }
