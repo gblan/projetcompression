@@ -364,28 +364,35 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	printf("%s\n", bufferCode);
 
 	tailleCode = strlen(bufferCode);
+
 	int nboctet = tailleCode / 8;
 
-	for (i = 0; i < tailleCode; i += 8) {
-		/*strncpy(charTemp, bufferCode[i], 8);*/
+	for (i = 0; i < nboctet; i++) {
+		strncpy(charTemp, bufferCode, 8);
 		currentChar = getBinaryValue(charTemp);
+		printf("currentChar : %c\n", currentChar);
 		fwrite(&currentChar, 1, 1, *ptFileOutput);
+		bufferCode += 8;
 	}
-	i = nboctet * 8;
-	/* si il reste des octets */
-	if (i != tailleCode) {
-		while (bufferCode[i] != '\0') {
-			/*strcat(charTemp,bufferCode[i]);*/
-			i++;
-		}
-		currentChar = getBinaryValue(charTemp);
-		fwrite(&currentChar, 1, 1, *ptFileOutput);
 
-	}
+	i = nboctet * 8;
+	/* TODO si il reste des octets */
+	/*if (i != tailleCode) {
+	 while (bufferCode[i] != '\0') {
+	 i++;
+	 }
+	 currentChar = getBinaryValue(charTemp);
+	 fwrite(&currentChar, 1, 1, *ptFileOutput);
+
+	 }*/
 
 	closeFile(ptFileOutput);
 
-	free(bufferCode);
+	/*TODO CHECK */
+	if (bufferCode != NULL) {
+		/*free(bufferCode);*/
+	}
+
 	freeHuffmanTree(elemL->noeudIntermediaire);
 	free(elemL);
 	printf("\n");
