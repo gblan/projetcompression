@@ -265,7 +265,6 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		exit(-1);
 	}
 
-	/* Vérifier la taille du fichier avant de l'ouvrir*/
 	while ((c = fgetc(*file)) != EOF) {
 		printf("%c", c);
 
@@ -308,16 +307,17 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	while ((*ptListe)->suivant != NULL) {
 		insertNewNodeInChainedList(ptListe);
 	}
-	/* La liste ne contient plus qu'un seul element qui contiend l'arbre entier */
 
+	/* La liste ne contient plus qu'un seul element qui contiend l'arbre entier */
 	tabChar = calloc(1, sizeof(char*));
 	if (tabChar == NULL) {
 		printf("Erreur d'allocation tabChar.\n");
 		exit(-1);
 	}
 
-	/* codage*/
+	/* Parcours d'arbre*/
 	prefixeHuffmanTree(elemL->noeudIntermediaire, tabChar, 0);
+
 	/* affichage caractères codés */
 	for (i = 0; i < 256; i++) {
 		if (code[i])
@@ -336,7 +336,16 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	openFile(fileOutputName, ptFileOutput, "wb+");
 	/*ECRITURE DANS LE FICHIER CIBLE*/
 
+
+	/* on écrit la taille du dictionnaire  */
+
 	/* Ecriture du dictionnaire de donnees */
+	for (i = 0; i < 256; i++) {
+		if (code[i]) {
+			putc(i,*ptFileOutput);
+			fwrite(&code[i],1,1,*ptFileOutput);
+		}
+	}
 
 	/* pointeur sur le début du fichier*/
 	fseek(*file, 0, SEEK_SET);
@@ -372,6 +381,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 
 	i = nboctet * 8;
+
 	/* si il reste des octets */
 	if (i != tailleCode) {
 		strcpy(charTemp, bufferCode);
