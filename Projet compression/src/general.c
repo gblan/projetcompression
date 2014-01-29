@@ -193,4 +193,10 @@ void decimalToBinary(int decimal, char* octet) {
 		strcat(octet, tmp);
 		charlen = strlen(octet);
 	}
+
+	for(i=0;i<8;i++){
+	if (octet[i] == '-') {
+		octet[i] = '1';
+	}
+	}
 }

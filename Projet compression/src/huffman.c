@@ -315,6 +315,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		printf("Erreur d'allocation tabChar.\n");
 		exit(-1);
 	}
+
 	/* codage*/
 	prefixeHuffmanTree(elemL->noeudIntermediaire, tabChar, 0);
 	/* affichage caractères codés */
@@ -334,8 +335,6 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	openFile(fileOutputName, ptFileOutput, "wb+");
 	/*ECRITURE DANS LE FICHIER CIBLE*/
-
-	fwrite(&tailleTab, 2, 1, *ptFileOutput);
 
 	/* Ecriture du dictionnaire de donnees */
 
@@ -360,11 +359,11 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		}
 	}
 	printf("\n");
-	/*printf("%s\n", bufferCode);*/
+	printf("%s\n", bufferCode);
 
 	tailleCode = strlen(bufferCode);
 	int nboctet = tailleCode / 8;
-	tailleFileOutput = nboctet+1;
+	tailleFileOutput = nboctet + 1;
 	for (i = 0; i < nboctet; i++) {
 		strncpy(charTemp, bufferCode, 8);
 		currentChar = binaryToDecimal(charTemp);
@@ -386,7 +385,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	/*if (bufferCode != NULL) {
 	 free(bufferCode);
 	 }*/
-	printf("Taux de compression : %.2f %% \n", (float)tailleFileOutput*100/(float)tailleFileInput);
+	printf("Taux de compression : %.2f %% \n",
+			(float) tailleFileOutput * 100 / (float) tailleFileInput);
 	freeHuffmanTree(elemL->noeudIntermediaire);
 	free(elemL);
 	free(intTab);
@@ -402,7 +402,29 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 }
 
-void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName){
+void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
+	char c;
+	char* bufferCode;
+	char currentOctet[8];
+	int i = 0;
+	int valueChar;
 
+	bufferCode = calloc(1, sizeof(char));
+	while (!feof(*file)) {
+		c = fgetc(*file);
+		/*on parcours tout le fichier compresse*/
+
+		bufferCode = realloc(bufferCode, 8 * (i + 2) * sizeof(char));
+		valueChar = c;
+		decimalToBinary(valueChar, currentOctet);
+		strcat(bufferCode, currentOctet);
+		i++;
+
+		printf("%c", c);
+	}
+
+	printf("\n");
+	printf("%s\n", bufferCode);
+	free(bufferCode);
 }
 

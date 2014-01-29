@@ -14,7 +14,6 @@
 
 int main(int argc, char *argv[]) {
 	int Comp = 0;
-	int i;
 	int UnComp = 0;
 	FILE* fileInput = NULL;
 	FILE** ptFileInput = &fileInput;
@@ -29,7 +28,7 @@ int main(int argc, char *argv[]) {
 
 	} else {
 		Comp = strcmp(argv[1], "c");
-		UnComp = strcmp(argv[1], "u");
+		UnComp = strcmp(argv[1], "d");
 
 		if (Comp == 0) {
 			printf("##### Compression\n");
@@ -45,6 +44,15 @@ int main(int argc, char *argv[]) {
 
 		} else if (UnComp == 0) {
 			printf("##### DeCompression\n");
+
+			if (openFile(argv[2], ptFileInput, "r+") != 0) {
+				printf("Erreur d'ouverture du fichier\n");
+				return -1;
+			}
+
+			decompressHuffman(ptFileInput, ptFileOutput, argv[2]);
+
+			closeFile(ptFileInput);
 
 		} else {
 			printf("!!!!! Mauvais parametres,\n");
