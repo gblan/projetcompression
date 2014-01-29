@@ -194,19 +194,3 @@ void decimalToBinary(int decimal, char* octet) {
 		charlen = strlen(octet);
 	}
 }
-
-long file_size(char *filename) {
-	FILE *file = fopen(filename, "r");
-	long ret;
-
-	if (file == NULL) {
-		return -1;
-	}
-
-	/*On place le curseur à la fin*/
-	fseek(file, 0, SEEK_END);
-	/*On récupére la position courante*/
-	ret = ftell(file);
-	fclose(file);
-	return ret;
-}

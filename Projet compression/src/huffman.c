@@ -29,6 +29,8 @@ typedef struct noeud {
 
 const char *code[256] = { 0 };
 char buf[1024];
+int tailleFileInput = 0;
+int tailleFileOutput = 0;
 
 void openFileToCompress(char *path) {
 	FILE* fichier = NULL;
@@ -344,7 +346,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	printf("Compression en cours, veuillez patienter . . .\n");
 	while ((c = fgetc(*file)) != EOF) {
-
+		tailleFileInput++;
 		for (i = 0; i < 256; i++) {
 			if (c == (char) i) {
 
@@ -362,7 +364,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	tailleCode = strlen(bufferCode);
 	int nboctet = tailleCode / 8;
-
+	tailleFileOutput = nboctet+1;
 	for (i = 0; i < nboctet; i++) {
 		strncpy(charTemp, bufferCode, 8);
 		currentChar = binaryToDecimal(charTemp);
@@ -371,9 +373,9 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 
 	i = nboctet * 8;
-	/* TODO si il reste des octets */
+	/* si il reste des octets */
 	if (i != tailleCode) {
-		strcpy(charTemp,bufferCode);
+		strcpy(charTemp, bufferCode);
 		currentChar = binaryToDecimal(charTemp);
 		fwrite(&currentChar, 1, 1, *ptFileOutput);
 	}
@@ -382,13 +384,11 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	/*TODO CHECK */
 	/*if (bufferCode != NULL) {
-		free(bufferCode);
-	}*/
-	printf("fileInputName : %s, fileOutputName : %s\n",fileInputName,fileOutputName);
-	printf("Taux de compression : %f, / %f \n",file_size(fileInputName),file_size(fileOutputName));
+	 free(bufferCode);
+	 }*/
+	printf("Taux de compression : %.2f %% \n", (float)tailleFileOutput*100/(float)tailleFileInput);
 	freeHuffmanTree(elemL->noeudIntermediaire);
 	free(elemL);
-	printf("\n");
 	free(intTab);
 	intTab = NULL;
 	free(charTab);
@@ -401,3 +401,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	tabChar = NULL;
 
 }
+
+void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName){
+
+}
+

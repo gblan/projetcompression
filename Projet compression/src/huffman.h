@@ -36,4 +36,7 @@ void insertNewNodeInChainedList(elementListe** elemL);
 void prefixeHuffmanTree(noeud *n, char *s, int len);
 void freeHuffmanTree(noeud *n);
 void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName);
+void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName);
+
 #endif /* HUFFMAN_H_ */
+

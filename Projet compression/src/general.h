@@ -21,6 +21,5 @@ void tri(char* charTab, int* intTab, int tabLength);
 char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName);
 int binaryToDecimal(char* subString);
 void decimalToBinary(int decimal, char* octet);
-long file_size(char *filename);
 
 #endif /* PRINT_H_ */
