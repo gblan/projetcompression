@@ -15,6 +15,11 @@ typedef struct elementListe {
 	struct noeud* noeudIntermediaire;
 } elementListe;
 
+typedef struct elementCompression {
+	int frequence;
+	char caractere;
+} elementCompression;
+
 typedef struct arbre {
 	struct noeud *racine;
 } arbre;
@@ -36,6 +41,7 @@ void insertNewNodeInChainedList(elementListe** elemL);
 void prefixeHuffmanTree(noeud *n, char *s, int len);
 void freeHuffmanTree(noeud *n);
 void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName);
+void decodeHuffmanTree(const char *s, noeud *t);
 void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName);
 
 #endif /* HUFFMAN_H_ */
