@@ -187,7 +187,7 @@ void decimalToBinary(int decimal, char* octet) {
 		for (i = 0; i < (7 - charlen); i++) {
 			octet[i] = '0';
 		}
-		for (i = (8 - charlen); i < 7; i++) {
+		for (i = (7 - charlen); i < 7; i++) {
 			octet[i] = '\0';
 		}
 		strcat(octet, tmp);
