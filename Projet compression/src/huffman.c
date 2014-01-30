@@ -83,16 +83,18 @@ void createTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab) {
 void createChainedList(elementListe** elemL, char charToAdd, int intToAdd) {
 	struct elementListe* nouveau;
 
-	nouveau = calloc(1, sizeof(elementListe));
-	if (nouveau == NULL) {
-		printf("Erreur d'allocation nouveau.\n");
-		exit(-1);
+	if (charToAdd != '\0') {
+		nouveau = calloc(1, sizeof(elementListe));
+		if (nouveau == NULL) {
+			printf("Erreur d'allocation nouveau.\n");
+			exit(-1);
+		}
+		nouveau->caractere = charToAdd;
+		nouveau->frequence = intToAdd;
+		nouveau->suivant = *elemL;
+		nouveau->noeudIntermediaire = NULL;
+		*elemL = nouveau;
 	}
-	nouveau->caractere = charToAdd;
-	nouveau->frequence = intToAdd;
-	nouveau->suivant = *elemL;
-	nouveau->noeudIntermediaire = NULL;
-	*elemL = nouveau;
 }
 
 void deleteTwoFirstElements(elementListe** liste) {
@@ -221,9 +223,13 @@ void prefixeHuffmanTree(noeud *n, char *s, int len) {
 	}
 
 	s[len] = '0';
-	prefixeHuffmanTree(n->gauche_0, s, len + 1);
+	if (n->gauche_0 != NULL) {
+		prefixeHuffmanTree(n->gauche_0, s, len + 1);
+	}
 	s[len] = '1';
-	prefixeHuffmanTree(n->droite_1, s, len + 1);
+	if (n->droite_1 != NULL) {
+		prefixeHuffmanTree(n->droite_1, s, len + 1);
+	}
 }
 
 void freeHuffmanTree(noeud *n) {
@@ -246,6 +252,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	int tailleTab = 0;
 	int tailleCode = 0;
 	int currentChar = 0;
+	int nbCharQuiReste;
 	char* tabChar;
 	char* fileOutputName;
 	int* intTab;
@@ -286,6 +293,10 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		}
 	}
 	printf("\n");
+
+	for (i = 0; i < tailleTab; i++) {
+		printf("1-%c   %d\n", charTab[i], intTab[i]);
+	}
 
 	tri(charTab, intTab, tailleTab);
 
@@ -380,37 +391,46 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	if (i != tailleCode) {
 		strcpy(charTemp, bufferCode);
 		currentChar = binaryToDecimal(charTemp);
-		fwrite(&currentChar, 1, 1, *ptFileOutput);
+		if (strlen(charTemp) != 7) {
+			for (i = 0; i < 7; i++) {
+				if (charTemp[i] == '\0') {
+					charTemp[i + 1] = '\0';
+					charTemp[i] = '0';
+				}
+			}
+
+			fwrite(&currentChar, 1, 1, *ptFileOutput);
+		}
+
+		closeFile(ptFileOutput);
+
+		/*TODO CHECK */
+		/*if (bufferCode != NULL) {
+		 free(bufferCode);
+		 }*/
+		printf("Taux de compression : %.2f %% \n",
+				(float) tailleFileOutput * 100 / (float) tailleFileInput);
+		freeHuffmanTree(elemL->noeudIntermediaire);
+
+		free(elemL);
+		free(intTab);
+		intTab = NULL;
+		free(charTab);
+		charTab = NULL;
+		free(archiveName);
+		archiveName = NULL;
+		free(fileOutputName);
+		fileOutputName = NULL;
+		free(tabChar);
+		tabChar = NULL;
 	}
-
-	closeFile(ptFileOutput);
-
-	/*TODO CHECK */
-	/*if (bufferCode != NULL) {
-	 free(bufferCode);
-	 }*/
-	printf("Taux de compression : %.2f %% \n",
-			(float) tailleFileOutput * 100 / (float) tailleFileInput);
-	freeHuffmanTree(elemL->noeudIntermediaire);
-	free(elemL);
-	free(intTab);
-	intTab = NULL;
-	free(charTab);
-	charTab = NULL;
-	free(archiveName);
-	archiveName = NULL;
-	free(fileOutputName);
-	fileOutputName = NULL;
-	free(tabChar);
-	tabChar = NULL;
-
 }
 
 void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char c;
 	char* bufferCode;
 	char currentOctet[7];
-	int i = 0, tailleBuf;
+	int i = 0;
 	int valueChar;
 
 	bufferCode = calloc(1, sizeof(char));
@@ -426,15 +446,15 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 		printf("%c", c);
 	}
+
 	/* on supprime les 8 derniers caracteres = \0 */
-	tailleBuf = strlen(bufferCode);
-	printf("%d\n", i);
-	for (i = (tailleBuf - 8); i < tailleBuf; i++) {
-		bufferCode[i] = '\0';
-	}
+	/*tailleBuf = strlen(bufferCode);
+	 printf("%d\n", i);
+	 for (i = (tailleBuf - 8); i < tailleBuf; i++) {
+	 bufferCode[i] = '\0';
+	 }*/
 	printf("\n");
 
 	printf("%s\n", bufferCode);
 	free(bufferCode);
 }
-
