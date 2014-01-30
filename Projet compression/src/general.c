@@ -195,8 +195,8 @@ void decimalToBinary(int decimal, char* octet) {
 	}
 
 	/*for (i = 0; i < 7; i++) {
-		if (octet[i] == '-') {
-			octet[i] = '1';
-		}
-	}*/
+	 if (octet[i] == '-') {
+	 octet[i] = '1';
+	 }
+	 }*/
 }

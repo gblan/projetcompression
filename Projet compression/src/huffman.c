@@ -461,7 +461,7 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char currentOctet[7];
 	int i = 0, tailleBuf;
 	int valueChar;
-	int tailleDico=0;
+	int tailleDico = 0;
 	int* intTab;
 	char* charTab;
 	struct elementCompression elementComp;
