@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 		} else if (UnComp == 0) {
 			printf("##### DeCompression\n");
 
-			if (openFile(argv[2], ptFileInput, "r+") != 0) {
+			if (openFile(argv[2], ptFileInput, "rb+") != 0) {
 				printf("Erreur d'ouverture du fichier\n");
 				return -1;
 			}

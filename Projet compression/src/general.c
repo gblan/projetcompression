@@ -154,7 +154,7 @@ char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName) {
 	return archiveName;
 }
 
-int binaryToDecimal(char subString[8]) {
+int binaryToDecimal(char subString[7]) {
 	int binary = atoi(subString);
 	int result = 0, i = 0, rem;
 
@@ -169,7 +169,7 @@ int binaryToDecimal(char subString[8]) {
 
 void decimalToBinary(int decimal, char* octet) {
 	int rem, i = 1, binary = 0, charlen;
-	char tmp[8];
+	char tmp[7];
 
 	while (decimal != 0) {
 		rem = decimal % 2;
@@ -182,21 +182,21 @@ void decimalToBinary(int decimal, char* octet) {
 	charlen = strlen(octet);
 
 	/*on ajoute des 0 pour completer l'octet*/
-	while (charlen != 8) {
+	while (charlen < 7) {
 		strcpy(tmp, octet);
-		for (i = 0; i < (8 - charlen); i++) {
+		for (i = 0; i < (7 - charlen); i++) {
 			octet[i] = '0';
 		}
-		for (i = (8 - charlen); i < 8; i++) {
+		for (i = (8 - charlen); i < 7; i++) {
 			octet[i] = '\0';
 		}
 		strcat(octet, tmp);
 		charlen = strlen(octet);
 	}
 
-	for(i=0;i<8;i++){
-	if (octet[i] == '-') {
-		octet[i] = '1';
-	}
-	}
+	/*for (i = 0; i < 7; i++) {
+		if (octet[i] == '-') {
+			octet[i] = '1';
+		}
+	}*/
 }

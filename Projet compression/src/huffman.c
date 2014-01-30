@@ -252,7 +252,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char* charTab;
 	char* archiveName = NULL;
 	char* bufferCode;
-	char charTemp[8];
+	char charTemp[7];
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
 	elementListe* a = NULL;
@@ -286,11 +286,6 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		}
 	}
 	printf("\n");
-
-	/* Affichage tableau d'apparition */
-	for (i = 0; i < tailleTab; i++) {
-		printf("1-%c   %d\n", charTab[i], intTab[i]);
-	}
 
 	tri(charTab, intTab, tailleTab);
 
@@ -336,14 +331,13 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	openFile(fileOutputName, ptFileOutput, "wb+");
 	/*ECRITURE DANS LE FICHIER CIBLE*/
 
-
 	/* on écrit la taille du dictionnaire  */
 
 	/* Ecriture du dictionnaire de donnees */
 	for (i = 0; i < 256; i++) {
 		if (code[i]) {
-			putc(i,*ptFileOutput);
-			fwrite(&code[i],1,1,*ptFileOutput);
+			/*putc(i,*ptFileOutput);
+			 fwrite(&code[i],1,1,*ptFileOutput);*/
 		}
 	}
 
@@ -352,7 +346,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	bufferCode = calloc(1, sizeof(char));
 
-	printf("Compression en cours, veuillez patienter . . .\n");
+	printf("Compression en cours, veuillez patienter . . .");
 	while ((c = fgetc(*file)) != EOF) {
 		tailleFileInput++;
 		for (i = 0; i < 256; i++) {
@@ -371,16 +365,16 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	printf("%s\n", bufferCode);
 
 	tailleCode = strlen(bufferCode);
-	int nboctet = tailleCode / 8;
+	int nboctet = tailleCode / 7;
 	tailleFileOutput = nboctet + 1;
 	for (i = 0; i < nboctet; i++) {
-		strncpy(charTemp, bufferCode, 8);
+		strncpy(charTemp, bufferCode, 7);
 		currentChar = binaryToDecimal(charTemp);
 		fwrite(&currentChar, 1, 1, *ptFileOutput);
-		bufferCode += 8;
+		bufferCode += 7;
 	}
 
-	i = nboctet * 8;
+	i = nboctet * 7;
 
 	/* si il reste des octets */
 	if (i != tailleCode) {
@@ -415,7 +409,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char c;
 	char* bufferCode;
-	char currentOctet[8];
+	char currentOctet[7];
 	int i = 0;
 	int valueChar;
 
@@ -424,7 +418,7 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		c = fgetc(*file);
 		/*on parcours tout le fichier compresse*/
 
-		bufferCode = realloc(bufferCode, 8 * (i + 2) * sizeof(char));
+		bufferCode = realloc(bufferCode, 7 * (i + 2) * sizeof(char));
 		valueChar = c;
 		decimalToBinary(valueChar, currentOctet);
 		strcat(bufferCode, currentOctet);
@@ -434,6 +428,8 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 
 	printf("\n");
+	/*i = strlen(bufferCode);
+	bufferCode[i - 8] = '\0';*/
 	printf("%s\n", bufferCode);
 	free(bufferCode);
 }
