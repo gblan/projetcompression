@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 	int Comp = 0;
 	int UnComp = 0;
 	int i;
-	char octet[8];
+	char octet[7];
 	FILE* fileInput = NULL;
 	FILE** ptFileInput = &fileInput;
 	FILE* fileOutput = NULL;
