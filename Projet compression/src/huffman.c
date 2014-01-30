@@ -410,7 +410,7 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char c;
 	char* bufferCode;
 	char currentOctet[7];
-	int i = 0;
+	int i = 0, tailleBuf;
 	int valueChar;
 
 	bufferCode = calloc(1, sizeof(char));
@@ -426,10 +426,14 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 		printf("%c", c);
 	}
-
+	/* on supprime les 8 derniers caracteres = \0 */
+	tailleBuf = strlen(bufferCode);
+	printf("%d\n", i);
+	for (i = (tailleBuf - 8); i < tailleBuf; i++) {
+		bufferCode[i] = '\0';
+	}
 	printf("\n");
-	/*i = strlen(bufferCode);
-	bufferCode[i - 8] = '\0';*/
+
 	printf("%s\n", bufferCode);
 	free(bufferCode);
 }
