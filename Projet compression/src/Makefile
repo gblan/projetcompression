@@ -1,7 +1,7 @@
 WALL=-Wextra -Wall -ansi -pedantic -g -std=c99 -D_GNU_SOURCE
 
-ProjetCompressionSansPerte: lzw.o huffman.o general.o main.o
-	gcc -o ProjetCompressionSansPerte lzw.o huffman.o general.o main.o
+ProjetCompressionSansPerte: huffman.o general.o main.o
+	gcc -o ProjetCompressionSansPerte huffman.o general.o main.o
 	rm -rf *.o
 main.o: main.c
 	gcc -c main.c $(WALL)
@@ -11,6 +11,3 @@ general.o: general.c general.h
 
 huffman.o: huffman.c huffman.h
 	gcc -c huffman.c $(WALL)
-	
-lzw.o: lzw.c lzw.h
-	gcc -c lzw.c $(WALL)

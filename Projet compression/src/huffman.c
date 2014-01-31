@@ -7,7 +7,6 @@
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
-#include<wchar.h>
 #include"general.h"
 
 typedef struct elementListe {
