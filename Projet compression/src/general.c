@@ -53,7 +53,7 @@ FILE* createFile(char* fileName) {
 }
 
 void writeFile(FILE** fichier, char* stringToWrite) {
-	fprintf(*fichier,"%s", stringToWrite);
+	fprintf(*fichier, "%s", stringToWrite);
 }
 
 void readFile(FILE** file) {
@@ -81,7 +81,7 @@ void bubbleSort(int min, int max, char* charTab, int* tabInt) {
 	/* on fait des permutations, jusqu'a ce qu'on ait effectué un parcours du tableau sans permutation*/
 	do {
 		bool = 0;
-		for (i = min; i < max; i++) {
+		for (i = min; i < max - 1; i++) {
 			if (tabInt[i] < tabInt[i + 1]) {
 				tmp = tabInt[i + 1];
 				tabInt[i + 1] = tabInt[i];

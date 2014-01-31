@@ -18,15 +18,6 @@ typedef struct elementListe {
 	struct noeud* noeudIntermediaire;
 } elementListe;
 
-typedef struct elementCompression {
-	int frequence;
-	char caractere;
-} elementCompression;
-
-typedef struct arbre {
-	struct noeud *racine;
-} arbre;
-
 typedef struct noeud {
 	char caractere;
 	struct noeud *gauche_0;
@@ -299,16 +290,16 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 
 	/* Affichage tableau */
-	/*for (i = 0; i < tailleTab; i++) {
-	 printf("1-%c   %d\n", charTab[i], intTab[i]);
-	 }*/
+	for (i = 0; i < tailleTab; i++) {
+		printf("1-%c   %d\n", charTab[i], intTab[i]);
+	}
 
 	tri(charTab, intTab, tailleTab);
 
 	/* Affichage tableau trié */
-	/*for (i = 0; i < tailleTab; i++) {
-	 printf("2-%c   %d\n", charTab[i], intTab[i]);
-	 }*/
+	for (i = 0; i < tailleTab; i++) {
+		printf("2-%c   %d\n", charTab[i], intTab[i]);
+	}
 
 	for (i = 0; i < tailleTab; i++) {
 		createChainedList(ptListe, charTab[i], intTab[i]);
@@ -549,7 +540,6 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	for (i = (tailleBuf - 8); i < tailleBuf; i++) {
 		bufferCode[i] = '\0';
 	}
-	printf("\n");
 
 	/* Affichage du buffer */
 	/*printf("%s\n", bufferCode);*/
@@ -585,7 +575,7 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	tabChar = NULL;
 
 	end_time = clock();
-	printf("Decompression effectuee en %lu s.",
+	printf("Decompression effectuee en %lu s.\n",
 			(long) ((end_time - start_time) / CLOCKS_PER_SEC));
 
 }

@@ -15,10 +15,6 @@ typedef struct elementListe {
 	struct noeud* noeudIntermediaire;
 } elementListe;
 
-typedef struct arbre {
-	struct noeud *racine;
-} arbre;
-
 typedef struct noeud {
 	char caractere;
 	struct noeud *gauche_0;
