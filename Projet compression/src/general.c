@@ -53,7 +53,7 @@ FILE* createFile(char* fileName) {
 }
 
 void writeFile(FILE** fichier, char* stringToWrite) {
-	fprintf(*fichier, stringToWrite);
+	fprintf(*fichier,"%s", stringToWrite);
 }
 
 void readFile(FILE** file) {
