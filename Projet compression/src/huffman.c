@@ -254,6 +254,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char charTemp[7];
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
+	elementListe* a = NULL;
 
 	/* temps de traitement */
 	clock_t start_time, end_time;
@@ -290,20 +291,24 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 
 	/* Affichage tableau */
-	for (i = 0; i < tailleTab; i++) {
+	/*for (i = 0; i < tailleTab; i++) {
 		printf("1-%c   %d\n", charTab[i], intTab[i]);
-	}
+	}*/
 
 	tri(charTab, intTab, tailleTab);
 
 	/* Affichage tableau trié */
-	for (i = 0; i < tailleTab; i++) {
+	/*for (i = 0; i < tailleTab; i++) {
 		printf("2-%c   %d\n", charTab[i], intTab[i]);
-	}
+	}*/
 
 	for (i = 0; i < tailleTab; i++) {
 		createChainedList(ptListe, charTab[i], intTab[i]);
 	}
+	/* Affichage liste chainee */
+	/*for (a = *ptListe;a->suivant!=NULL;a = a->suivant) {
+		printf("3-%c   %d\n", a->caractere, a->frequence);
+	}*/
 
 	printf("\n");
 
