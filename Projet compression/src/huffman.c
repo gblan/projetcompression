@@ -310,7 +310,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	/* Affichage liste chainée triée */
 	for (a = *ptListe; a != NULL; a = a->suivant) {
-		printf("2-%c   %d\n", a->caractere, a->frequence);
+		printf("3-%c   %d\n", a->caractere, a->frequence);
 	}
 	printf("\n");
 
@@ -347,13 +347,15 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	/*ECRITURE DANS LE FICHIER CIBLE*/
 
 	/* on écrit la taille du dictionnaire  */
+	fwrite(&tailleTab, sizeof(int), 1, *ptFileOutput);
 
-	struct elementCompression elementComp;
 	/* Ecriture du dictionnaire de donnees */
 	for (i = 0; i < tailleTab; i++) {
-		elementComp.caractere = charTab[i];
-		elementComp.frequence = intTab[i];
-		fwrite(&elementComp, sizeof(elementCompression), 1, *ptFileOutput);
+
+		fwrite(&charTab[i], sizeof(char), 1, *ptFileOutput);
+		tailleFileOutput++;
+		fwrite(&intTab[i], sizeof(int), 1, *ptFileOutput);
+		tailleFileOutput += 2;
 	}
 
 	bufferCode = calloc(1, sizeof(char));
@@ -431,28 +433,27 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	fseek(*ptFileOutput, 0, SEEK_SET);
 
 	printf("tailleTab : %d\n", tailleTab);
-	/*fwrite(&tailleTab,1,1,*ptFileOutput);*/
 
 }
 
-void decodeHuffmanTree(const char *s, noeud *t) {
-	noeud *n = t;
+void decodeHuffmanTree(const char *bufferToDecode, noeud *noeudRacine) {
+	noeud *ptRacine = noeudRacine;
 
-	while (*s) {
-		if (*s++ == '0') {
-			n = n->gauche_0;
+	while (*bufferToDecode) {
+		if (*bufferToDecode++ == '0') {
+			ptRacine = ptRacine->gauche_0;
 		} else {
-			n = n->droite_1;
+			ptRacine = ptRacine->droite_1;
 		}
 
-		if (n->caractere) {
-			putchar(n->caractere), n = t;
+		if (ptRacine->caractere != '\0') {
+			putchar(ptRacine->caractere), ptRacine = noeudRacine;
 		}
 	}
 
 	putchar('\n');
-	if (t != n)
-		printf("garbage input\n");
+	if (noeudRacine != ptRacine)
+		printf("Probleme de decodage avec les derniers caracteres\n");
 }
 
 void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
@@ -461,31 +462,71 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char currentOctet[7];
 	int i = 0, tailleBuf;
 	int valueChar;
-	int tailleDico = 0;
+	int tailleDico = 0, tailleTab;
 	int* intTab;
 	char* charTab;
-	struct elementCompression elementComp;
+	char* tabChar;
+
+	elementListe* elemL = NULL;
+	elementListe** ptListe = &elemL;
+	elementListe* a = NULL;
 	bufferCode = calloc(1, sizeof(char));
 
 	/* Lire la taille des structures au début du fichier */
 	fread(&tailleDico, sizeof(int), 1, *file);
+	printf("%d\n", tailleDico);
 
 	intTab = calloc(1, sizeof(int));
 	charTab = calloc(1, sizeof(char));
 	/* on lit les structures unes a une et on les met dans 2 tableaux (int+char) */
 	i = 0;
 	while (i < tailleDico) {
-		intTab = realloc(intTab, sizeof(int) * i + 1);
 		charTab = realloc(charTab, sizeof(char) * i + 1);
-		/*fread(elementComp, sizeof(elementCompression), 1, *file);*/
-		charTab[i] = elementComp.caractere;
-		intTab[i] = elementComp.frequence;
+		intTab = realloc(intTab, sizeof(int) * i + 1);
+
+		fread(&charTab[i], sizeof(char), 1, *file);
+		fread(&intTab[i], sizeof(int), 1, *file);
 		i++;
 	}
+	for (i = 0; i < tailleDico; i++) {
+		printf("1- %c %d\n", charTab[i], intTab[i]);
+	}
 
+	tailleTab = tailleDico;
+
+	for (i = 0; i < tailleTab; i++) {
+		createChainedList(ptListe, charTab[i], intTab[i]);
+	}
+
+	/* Affichage liste chainée triée */
+	for (a = *ptListe; a != NULL; a = a->suivant) {
+		printf("3-%c   %d\n", a->caractere, a->frequence);
+	}
+	printf("\n");
+
+	while ((*ptListe)->suivant != NULL) {
+		insertNewNodeInChainedList(ptListe);
+	}
+
+	/* La liste ne contient plus qu'un seul element qui contiend l'arbre entier */
+	tabChar = calloc(1, sizeof(char*));
+	if (tabChar == NULL) {
+		printf("Erreur d'allocation tabChar.\n");
+		exit(-1);
+	}
+
+	/* Parcours d'arbre*/
+	prefixeHuffmanTree(elemL->noeudIntermediaire, tabChar, 0);
+
+	/* affichage caractères codés */
+	for (i = 0; i < 256; i++) {
+		if (code[i])
+			printf("'%c': %s\n", i, code[i]);
+	}
+
+	/* on parcours le fichier compresse */
 	while (!feof(*file)) {
 		c = fgetc(*file);
-		/*on parcours tout le fichier compresse*/
 		bufferCode = realloc(bufferCode, 7 * (i + 2) * sizeof(char));
 		valueChar = c;
 		decimalToBinary(valueChar, currentOctet);
@@ -503,11 +544,18 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 	printf("\n");
 
-	/* creation de liste chainee et d'arbre */
-	/* decodeHuffmanTree */
-	/* DONE*/
-
 	printf("%s\n", bufferCode);
 
+	decodeHuffmanTree(bufferCode,elemL->noeudIntermediaire);
+
+
 	free(bufferCode);
+	free(elemL);
+	elemL = NULL;
+	free(intTab);
+	intTab = NULL;
+	free(charTab);
+	charTab = NULL;
+	free(tabChar);
+	tabChar = NULL;
 }

@@ -15,11 +15,6 @@ typedef struct elementListe {
 	struct noeud* noeudIntermediaire;
 } elementListe;
 
-typedef struct elementCompression {
-	int frequence;
-	char caractere;
-} elementCompression;
-
 typedef struct arbre {
 	struct noeud *racine;
 } arbre;
