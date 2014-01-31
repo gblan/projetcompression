@@ -14,7 +14,6 @@
 int main(int argc, char *argv[]) {
 	int Comp = 0;
 	int UnComp = 0;
-	int i;
 	FILE* fileInput = NULL;
 	FILE** ptFileInput = &fileInput;
 	FILE* fileOutput = NULL;
