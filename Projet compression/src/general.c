@@ -22,7 +22,7 @@ int openFile(char* filename, FILE** fichier, char* mode) {
 	*fichier = fopen(filename, mode);
 
 	if (*fichier != NULL) {
-		printf("Open \"%s\" OK\n", filename);
+		/*printf("Open \"%s\" OK\n", filename);*/
 		return 0;
 
 	} else {
@@ -34,7 +34,7 @@ int openFile(char* filename, FILE** fichier, char* mode) {
 void closeFile(FILE** fichier) {
 	if (fichier != NULL) {
 		fclose(*fichier);
-		printf("Close OK\n");
+		/*printf("Close OK\n");*/
 	} else {
 		printf("Close KO\n");
 	}

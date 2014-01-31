@@ -7,6 +7,8 @@
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
+#include<time.h>
+
 #include"general.h"
 
 typedef struct elementListe {
@@ -33,8 +35,8 @@ typedef struct noeud {
 
 const char *code[256] = { 0 };
 char buf[1024];
-int tailleFileInput = 0;
-int tailleFileOutput = 0;
+unsigned long long tailleFileInput = 0;
+unsigned long long tailleFileOutput = 0;
 
 void openFileToCompress(char *path) {
 	FILE* fichier = NULL;
@@ -261,7 +263,10 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char charTemp[7];
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
-	elementListe* a = NULL;
+
+	/* temps de traitement */
+	clock_t start_time, end_time;
+	start_time = clock();
 
 	intTab = calloc(1, sizeof(int));
 	charTab = calloc(1, sizeof(char));
@@ -272,7 +277,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 
 	while ((c = fgetc(*file)) != EOF) {
-		printf("%c", c);
+
+		/*printf("%c", c);*/
 
 		if (isInTab(c, charTab) == -1) {
 			intTab = realloc(intTab, sizeof(int) * tailleTab + 1);
@@ -291,22 +297,23 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 			intTab[positionChar]++;
 		}
 	}
-	printf("\n");
 
-	for (i = 0; i < tailleTab; i++) {
-		printf("1-%c   %d\n", charTab[i], intTab[i]);
-	}
+	/* Affichage tableau */
+	/*for (i = 0; i < tailleTab; i++) {
+	 printf("1-%c   %d\n", charTab[i], intTab[i]);
+	 }*/
 
 	tri(charTab, intTab, tailleTab);
+
+	/* Affichage tableau trié */
+	/*for (i = 0; i < tailleTab; i++) {
+	 printf("2-%c   %d\n", charTab[i], intTab[i]);
+	 }*/
 
 	for (i = 0; i < tailleTab; i++) {
 		createChainedList(ptListe, charTab[i], intTab[i]);
 	}
 
-	/* Affichage liste chainée triée */
-	for (a = *ptListe; a != NULL; a = a->suivant) {
-		printf("3-%c   %d\n", a->caractere, a->frequence);
-	}
 	printf("\n");
 
 	while ((*ptListe)->suivant != NULL) {
@@ -328,6 +335,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		if (code[i])
 			printf("'%c': %s\n", i, code[i]);
 	}
+
+	printf("Compression en cours, veuillez patienter . . .\n");
 
 	/*Ecriture de la taille de la table des fréquences */
 	fileOutputName = calloc((8 + strlen(fileInputName)), sizeof(char));
@@ -358,7 +367,6 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	/*pointeur sur le fichier initial pour un nouveau parcours (creation du code)*/
 	fseek(*file, 0, SEEK_SET);
 
-	printf("Compression en cours, veuillez patienter . . .");
 	while ((c = fgetc(*file)) != EOF) {
 		tailleFileInput++;
 		for (i = 0; i < 256; i++) {
@@ -374,7 +382,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		}
 	}
 	printf("\n");
-	printf("%s\n", bufferCode);
+	/* Affichage du buffer */
+	/*printf("%s\n", bufferCode);*/
 
 	tailleCode = strlen(bufferCode);
 	int nboctet = tailleCode / 7;
@@ -405,8 +414,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 	closeFile(ptFileOutput);
 
-	printf("Taux de compression : %.2f %% \n",
-			(float) tailleFileOutput * 100 / (float) tailleFileInput);
+	printf("Taux de compression : %.2llu %% \n",
+			((tailleFileOutput) * 100 / tailleFileInput));
 	freeHuffmanTree(elemL->noeudIntermediaire);
 
 	free(elemL);
@@ -421,10 +430,9 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	free(tabChar);
 	tabChar = NULL;
 
-	fseek(*ptFileOutput, 0, SEEK_SET);
-
-	printf("tailleTab : %d\n", tailleTab);
-
+	end_time = clock();
+	printf("Compression effectuee en %lu s.",
+			(long) ((end_time - start_time) / CLOCKS_PER_SEC));
 }
 
 void decodeHuffmanTree(const char *bufferToDecode, noeud *noeudRacine,
@@ -460,20 +468,24 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char* tabChar;
 	char* fileOutputName;
 	char* decodedFileName = NULL;
-
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
-	elementListe* a = NULL;
+
+	/* temps de traitement */
+	clock_t start_time, end_time;
+	start_time = clock();
+
 	bufferCode = calloc(1, sizeof(char));
 
 	/* Lire la taille des structures au début du fichier */
 	fread(&tailleDico, sizeof(int), 1, *file);
-	printf("%d\n", tailleDico);
+	/*printf("%d\n", tailleDico);*/
 
 	charTab = calloc(1, sizeof(char));
 	intTab = calloc(1, sizeof(int));
-	/* on lit les structures unes a une et on les met dans 2 tableaux (int+char) */
 	i = 0;
+
+	/* Extraction du dictionnaire */
 	while (i < tailleDico) {
 		charTab = realloc(charTab, sizeof(char) * i + 1);
 		intTab = realloc(intTab, sizeof(int) * i + 1);
@@ -482,20 +494,19 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		fread(&intTab[i], sizeof(int), 1, *file);
 		i++;
 	}
-	for (i = 0; i < tailleDico; i++) {
-		printf("1- %c %d\n", charTab[i], intTab[i]);
-	}
+
+	/* Affichage des caractères */
+	/*for (i = 0; i < tailleDico; i++) {
+	 printf("1- %c %d\n", charTab[i], intTab[i]);
+	 }*/
 
 	tailleTab = tailleDico;
 
+	/* Creation de liste chainee */
 	for (i = 0; i < tailleTab; i++) {
 		createChainedList(ptListe, charTab[i], intTab[i]);
 	}
 
-	/* Affichage liste chainée triée */
-	for (a = *ptListe; a != NULL; a = a->suivant) {
-		printf("3-%c   %d\n", a->caractere, a->frequence);
-	}
 	printf("\n");
 
 	while ((*ptListe)->suivant != NULL) {
@@ -518,7 +529,10 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 			printf("'%c': %s\n", i, code[i]);
 	}
 
+	printf("Decompression en cours, veuillez patienter . . .\n");
+
 	/* on parcours le fichier compresse */
+	bufferCode = calloc(1, sizeof(char));
 	while (!feof(*file)) {
 		c = fgetc(*file);
 		bufferCode = realloc(bufferCode, 7 * (i + 2) * sizeof(char));
@@ -527,18 +541,18 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		strcat(bufferCode, currentOctet);
 		i++;
 
-		printf("%c", c);
+		/*printf("%c", c);*/
 	}
 
 	/* on supprime les 8 derniers caracteres = \0 */
 	tailleBuf = strlen(bufferCode);
-	printf("%d\n", i);
 	for (i = (tailleBuf - 8); i < tailleBuf; i++) {
 		bufferCode[i] = '\0';
 	}
 	printf("\n");
 
-	printf("%s\n", bufferCode);
+	/* Affichage du buffer */
+	/*printf("%s\n", bufferCode);*/
 
 	/*Ecriture de la taille de la table des fréquences */
 	fileOutputName = calloc((8 + strlen(fileInputName)), sizeof(char));
@@ -557,7 +571,7 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	closeFile(ptFileOutput);
 
 	/*free(fileOutputName);
-	fileOutputName = NULL;*/
+	 fileOutputName = NULL;*/
 	free(decodedFileName);
 	decodedFileName = NULL;
 	free(bufferCode);
@@ -569,4 +583,9 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	charTab = NULL;
 	free(tabChar);
 	tabChar = NULL;
+
+	end_time = clock();
+	printf("Decompression effectuee en %lu s.",
+			(long) ((end_time - start_time) / CLOCKS_PER_SEC));
+
 }
