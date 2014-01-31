@@ -141,7 +141,7 @@ char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName) {
 	int longueurNomFichier = 0;
 
 	longueurNomFichier = strlen(fileName);
-	archiveName = malloc((longueurNomFichier + 8) * sizeof(char));
+	archiveName = calloc((longueurNomFichier + 8), sizeof(char));
 	if (archiveName == NULL) {
 		printf("Erreur d'allocation archiveName.\n");
 		exit(-1);
@@ -152,6 +152,24 @@ char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName) {
 	closeFile(ptFileOutput);
 
 	return archiveName;
+}
+
+char* createDecodedFile(char* fileName, FILE** ptFileOutput,
+		char* decodedFileName) {
+	int longueurNomFichier = 0;
+
+	longueurNomFichier = strlen(fileName);
+	decodedFileName = calloc((longueurNomFichier + 8), sizeof(char));
+	if (decodedFileName == NULL) {
+		printf("Erreur d'allocation decodedFileName.\n");
+		exit(-1);
+	}
+	strcat(decodedFileName, fileName);
+	strcat(decodedFileName, ".decoded");
+	openFile(decodedFileName, ptFileOutput, "ab");
+	closeFile(ptFileOutput);
+
+	return decodedFileName;
 }
 
 int binaryToDecimal(char subString[7]) {

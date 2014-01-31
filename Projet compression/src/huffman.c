@@ -158,10 +158,6 @@ void insertNewNodeInChainedList(elementListe** elemL) {
 		exit(-1);
 	}
 
-	/* on cherche le nombre de probas simillaires dans la liste chainée*/
-	/* et on ajoute a la fin des mêmes probas*/
-
-	/*if (p->frequence < value && p->suivant->frequence > value) {*/
 	/* Alors on insert à cet endroit */
 
 	if (p->noeudIntermediaire == NULL && p->suivant->noeudIntermediaire == NULL) {
@@ -410,10 +406,6 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	}
 	closeFile(ptFileOutput);
 
-	/*TODO CHECK */
-	/*if (bufferCode != NULL) {
-	 free(bufferCode);
-	 }*/
 	printf("Taux de compression : %.2f %% \n",
 			(float) tailleFileOutput * 100 / (float) tailleFileInput);
 	freeHuffmanTree(elemL->noeudIntermediaire);
@@ -436,7 +428,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 }
 
-void decodeHuffmanTree(const char *bufferToDecode, noeud *noeudRacine) {
+void decodeHuffmanTree(const char *bufferToDecode, noeud *noeudRacine,
+		FILE** ptFileOutput) {
 	noeud *ptRacine = noeudRacine;
 
 	while (*bufferToDecode) {
@@ -447,7 +440,7 @@ void decodeHuffmanTree(const char *bufferToDecode, noeud *noeudRacine) {
 		}
 
 		if (ptRacine->caractere != '\0') {
-			putchar(ptRacine->caractere), ptRacine = noeudRacine;
+			putc(ptRacine->caractere, *ptFileOutput), ptRacine = noeudRacine;
 		}
 	}
 
@@ -466,6 +459,8 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	int* intTab;
 	char* charTab;
 	char* tabChar;
+	char* fileOutputName;
+	char* decodedFileName = NULL;
 
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
@@ -476,8 +471,8 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	fread(&tailleDico, sizeof(int), 1, *file);
 	printf("%d\n", tailleDico);
 
-	intTab = calloc(1, sizeof(int));
 	charTab = calloc(1, sizeof(char));
+	intTab = calloc(1, sizeof(int));
 	/* on lit les structures unes a une et on les met dans 2 tableaux (int+char) */
 	i = 0;
 	while (i < tailleDico) {
@@ -546,9 +541,26 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	printf("%s\n", bufferCode);
 
-	decodeHuffmanTree(bufferCode,elemL->noeudIntermediaire);
+	/*Ecriture de la taille de la table des fréquences */
+	fileOutputName = calloc((8 + strlen(fileInputName)), sizeof(char));
+	if (fileOutputName == NULL) {
+		printf("Erreur d'allocation fileOutputName.\n");
+		exit(-1);
+	}
 
+	fileOutputName = createDecodedFile(fileInputName, ptFileOutput,
+			decodedFileName);
 
+	openFile(fileOutputName, ptFileOutput, "wb+");
+
+	decodeHuffmanTree(bufferCode, elemL->noeudIntermediaire, ptFileOutput);
+
+	closeFile(ptFileOutput);
+
+	/*free(fileOutputName);
+	fileOutputName = NULL;*/
+	free(decodedFileName);
+	decodedFileName = NULL;
 	free(bufferCode);
 	free(elemL);
 	elemL = NULL;

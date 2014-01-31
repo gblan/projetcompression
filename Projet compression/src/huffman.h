@@ -36,7 +36,8 @@ void insertNewNodeInChainedList(elementListe** elemL);
 void prefixeHuffmanTree(noeud *n, char *s, int len);
 void freeHuffmanTree(noeud *n);
 void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName);
-void decodeHuffmanTree(const char *s, noeud *t);
+void decodeHuffmanTree(const char *bufferToDecode, noeud *noeudRacine,
+		FILE** ptFileOutput);
 void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName);
 
 #endif /* HUFFMAN_H_ */

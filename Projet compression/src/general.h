@@ -19,6 +19,8 @@ void bubbleSort(char* charTab, int* tabInt, int tabLength);
 void bubbleSortchar(int min, int max, char* charTab, int* tabInt);
 void tri(char* charTab, int* intTab, int tabLength);
 char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName);
+char* createDecodedFile(char* fileName, FILE** ptFileOutput,
+		char* decodedFileName);
 int binaryToDecimal(char* subString);
 void decimalToBinary(int decimal, char* octet);
 
