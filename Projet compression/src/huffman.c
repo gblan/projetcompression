@@ -11,17 +11,19 @@
 
 #include"general.h"
 
+/* structure de liste chainee */
 typedef struct elementListe {
-	int frequence;
+	int frequence; /* frequence d'apparition du caractere */
 	char caractere;
-	struct elementListe* suivant;
-	struct noeud* noeudIntermediaire;
+	struct elementListe* suivant; /* pointeur sur l'element suivant de la liste*/
+	struct noeud* noeudIntermediaire; /* pointeur sur le noeud intermediaire*/
 } elementListe;
 
+/* structure de noeud d'arbre */
 typedef struct noeud {
-	char caractere;
-	struct noeud *gauche_0;
-	struct noeud *droite_1;
+	char caractere; /* caractere ou \0 si on est sur un noeur qui n'est pas feuille de l'arbre*/
+	struct noeud *gauche_0; /* pointeur sur le fils gauche */
+	struct noeud *droite_1; /* pointeur sur le fils droit */
 } noeud;
 
 const char *code[256] = { 0 };
@@ -29,22 +31,6 @@ char buf[1024];
 unsigned long long tailleFileInput = 0;
 unsigned long long tailleFileOutput = 0;
 
-void openFileToCompress(char *path) {
-	FILE* fichier = NULL;
-	char* read = NULL;
-
-	fichier = fopen(path, "r");
-
-	if (fichier != NULL) {
-		while (fgets(read, 1000, fichier) != NULL) {
-			printf("%s", read);
-		}
-		fclose(fichier);
-	}
-}
-
-/* si le caractere est dans le tableau, alors on retourne sa position
- * sinon on retourne -1 */
 int isInTab(char c, char* charTab) {
 	int i = 0;
 
@@ -55,26 +41,6 @@ int isInTab(char c, char* charTab) {
 		i++;
 	}
 	return -1;
-}
-
-int sumTab(int* tabInt, int tailleTab) {
-	int i = 0, result = 0;
-
-	for (i = 0; i < tailleTab; i++) {
-		result += tabInt[i];
-	}
-	return result;
-}
-
-void createTabProba(float* tabProba, int* tabInt, int tailleTab, int sumTab) {
-	int i = 0;
-
-	for (i = 0; i < tailleTab; i++) {
-		tabProba[i] = ((float) tabInt[i] / (float) sumTab);
-		/* Test*/
-		printf("tabProba[%d] = %f , tabInt[%d] = %d \n", i, tabProba[i], i,
-				tabInt[i]);
-	}
 }
 
 void createChainedList(elementListe** elemL, char charToAdd, int intToAdd) {
@@ -254,7 +220,6 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char charTemp[7];
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
-	elementListe* a = NULL;
 
 	/* temps de traitement */
 	clock_t start_time, end_time;
