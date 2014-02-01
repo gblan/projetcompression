@@ -114,41 +114,23 @@ void tri(char* charTab, int* intTab, int tabLength) {
 	}
 }
 
-char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName) {
+char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* suffixe) {
 	int longueurNomFichier = 0;
+	char* fileOutputname = NULL;
 
 	longueurNomFichier = strlen(fileName);
-	archiveName = calloc((longueurNomFichier + 8), sizeof(char));
-	if (archiveName == NULL) {
+	fileOutputname = calloc((longueurNomFichier + 8), sizeof(char));
+	if (fileOutputname == NULL) {
 
 		printf("Erreur d'allocation archiveName.\n");
 		exit(-1);
 	}
-	strcat(archiveName, fileName);
-	strcat(archiveName, ".huffman");
-	openFile(archiveName, ptFileOutput, "ab");
+	strcat(fileOutputname, fileName);
+	strcat(fileOutputname, suffixe);
+	openFile(fileOutputname, ptFileOutput, "ab");
 	closeFile(ptFileOutput);
 
-	return archiveName;
-}
-
-char* createDecodedFile(char* fileName, FILE** ptFileOutput,
-		char* decodedFileName) {
-	int longueurNomFichier = 0;
-
-	longueurNomFichier = strlen(fileName);
-	decodedFileName = calloc((longueurNomFichier + 8), sizeof(char));
-	if (decodedFileName == NULL) {
-
-		printf("Erreur d'allocation decodedFileName.\n");
-		exit(-1);
-	}
-	strcat(decodedFileName, fileName);
-	strcat(decodedFileName, ".decoded");
-	openFile(decodedFileName, ptFileOutput, "ab");
-	closeFile(ptFileOutput);
-
-	return decodedFileName;
+	return fileOutputname;
 }
 
 int binaryToDecimal(char subString[7]) {

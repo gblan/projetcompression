@@ -68,22 +68,15 @@ void tri(char* charTab, int* intTab, int tabLength);
 
 /*  Fonction: createBinaryFile
  *  Entrees: - nom du fichier d'entree
- *  Sorties: - pointeur sur le fichier cree
+ *  		- pointeur sur le fichier cree
+ *  		- suffixe
+ *  Sorties: - nom du fichier de sortie
  *
  *  cree le fichier d'archive, dont le nom est composé
  *  du nom du fichier source + l'extension .huffman
  */
-char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* archiveName);
+char* createBinaryFile(char* fileName, FILE** ptFileOutput, char* suffixe);
 
-/*  Fonction: createDecodedFile
- *  Entrees: - nom du fichier d'entree
- *  Sorties: - pointeur sur le fichier cree
- *
- *  cree le fichier decodé, dont le nom est composé
- *  du nom du fichier source(.huffman) + l'extension .decoded
- */
-char* createDecodedFile(char* fileName, FILE** ptFileOutput,
-		char* decodedFileName);
 
 /*  Fonction: binaryToDecimal
  *  Entrees: - chaine de 7 caracteres (0&1)

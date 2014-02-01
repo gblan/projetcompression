@@ -215,7 +215,6 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char* fileOutputName;
 	int* intTab;
 	char* charTab;
-	char* archiveName = NULL;
 	char* bufferCode;
 	char charTemp[7];
 	elementListe* elemL = NULL;
@@ -306,9 +305,9 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		exit(-1);
 	}
 
-	fileOutputName = createBinaryFile(fileInputName, ptFileOutput, archiveName);
+	fileOutputName = createBinaryFile(fileInputName, ptFileOutput, ".huffman");
 
-	openFile(fileOutputName, ptFileOutput, "wb+");
+	openFile(fileOutputName, ptFileOutput, "wb");
 	/*ECRITURE DANS LE FICHIER CIBLE*/
 
 	/* on écrit la taille du dictionnaire  */
@@ -384,8 +383,6 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	intTab = NULL;
 	free(charTab);
 	charTab = NULL;
-	free(archiveName);
-	archiveName = NULL;
 	free(fileOutputName);
 	fileOutputName = NULL;
 	free(tabChar);
@@ -412,7 +409,7 @@ void decodeHuffmanTree(const char *bufferToDecode, noeud *noeudRacine,
 		}
 	}
 
-	putchar('\n');
+	printf("\n");
 	if (noeudRacine != ptRacine)
 		printf("Probleme de decodage avec les derniers caracteres\n");
 }
@@ -428,7 +425,7 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	char* charTab;
 	char* tabChar;
 	char* fileOutputName;
-	char* decodedFileName = NULL;
+	char* decodedFileName;
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
 
@@ -515,15 +512,15 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	/*printf("%s\n", bufferCode);*/
 
 	/*Ecriture de la taille de la table des fréquences */
-	fileOutputName = calloc((8 + strlen(fileInputName)), sizeof(char));
-	if (fileOutputName == NULL) {
+	decodedFileName = calloc((8 + strlen(fileInputName)), sizeof(char));
+	if (decodedFileName == NULL) {
 		printf("Erreur d'allocation fileOutputName.\n");
 		exit(-1);
 	}
 
-	fileOutputName = createDecodedFile(fileInputName, ptFileOutput,
-			decodedFileName);
+	fileOutputName = createBinaryFile(fileInputName, ptFileOutput,".decoded");
 
+	printf("5%s\n", fileOutputName);
 	openFile(fileOutputName, ptFileOutput, "wb+");
 
 	decodeHuffmanTree(bufferCode, elemL->noeudIntermediaire, ptFileOutput);
@@ -531,9 +528,9 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	closeFile(ptFileOutput);
 
 	/*free(fileOutputName);
-	 fileOutputName = NULL;*/
+	 fileOutputName = NULL;
 	free(decodedFileName);
-	decodedFileName = NULL;
+	decodedFileName = NULL;*/
 	free(bufferCode);
 	free(elemL);
 	elemL = NULL;
