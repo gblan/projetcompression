@@ -424,7 +424,6 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	int* intTab;
 	char* charTab;
 	char* tabChar;
-	char* fileOutputName;
 	char* decodedFileName;
 	elementListe* elemL = NULL;
 	elementListe** ptListe = &elemL;
@@ -518,10 +517,10 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		exit(-1);
 	}
 
-	fileOutputName = createBinaryFile(fileInputName, ptFileOutput,".decoded");
-
-	printf("5%s\n", fileOutputName);
-	openFile(fileOutputName, ptFileOutput, "wb+");
+	strcat(fileInputName,".decoded");
+	*ptFileOutput = createFile(fileInputName);
+	closeFile(ptFileOutput);
+	openFile(fileInputName, ptFileOutput, "wb+");
 
 	decodeHuffmanTree(bufferCode, elemL->noeudIntermediaire, ptFileOutput);
 
