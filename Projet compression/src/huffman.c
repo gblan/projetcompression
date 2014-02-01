@@ -211,6 +211,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	int tailleTab = 0;
 	int tailleCode = 0;
 	int currentChar = 0;
+	float longueurTotaleCode = 0;
 	char* tabChar;
 	char* fileOutputName;
 	int* intTab;
@@ -232,10 +233,10 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		exit(-1);
 	}
 
+	/* parcours du fichier source et remplissage des tableaux de frequence*/
 	while ((c = fgetc(*file)) != EOF) {
 
 		/*printf("%c", c);*/
-
 		if (isInTab(c, charTab) == -1) {
 			intTab = realloc(intTab, sizeof(int) * tailleTab + 1);
 			charTab = realloc(charTab, sizeof(char) * tailleTab + 1);
@@ -256,23 +257,23 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	/* Affichage tableau */
 	/*for (i = 0; i < tailleTab; i++) {
-		printf("1-%c   %d\n", charTab[i], intTab[i]);
-	}*/
+	 printf("1-%c   %d\n", charTab[i], intTab[i]);
+	 }*/
 
 	tri(charTab, intTab, tailleTab);
 
-	/* Affichage tableau trié */
+	/* Affichage tableaux triés */
 	/*for (i = 0; i < tailleTab; i++) {
-		printf("2-%c   %d\n", charTab[i], intTab[i]);
-	}*/
+	 printf("2-%c   %d\n", charTab[i], intTab[i]);
+	 }*/
 
 	for (i = 0; i < tailleTab; i++) {
 		createChainedList(ptListe, charTab[i], intTab[i]);
 	}
-	/* Affichage liste chainee */
+	/* Affichage liste chainee triée*/
 	/*for (a = *ptListe;a->suivant!=NULL;a = a->suivant) {
-		printf("3-%c   %d\n", a->caractere, a->frequence);
-	}*/
+	 printf("3-%c   %d\n", a->caractere, a->frequence);
+	 }*/
 
 	printf("\n");
 
@@ -292,10 +293,14 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	/* affichage caractères codés */
 	for (i = 0; i < 256; i++) {
-		if (code[i])
+		if (code[i]) {
 			printf("'%c': %s\n", i, code[i]);
+			longueurTotaleCode += strlen(code[i]);
+		}
 	}
 
+	printf("Longueur moyenne d'un symbole : %.2f bits\n",
+			longueurTotaleCode / tailleTab);
 	printf("Compression en cours, veuillez patienter . . .\n");
 
 	/*Ecriture de la taille de la table des fréquences */
@@ -308,7 +313,9 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	fileOutputName = createBinaryFile(fileInputName, ptFileOutput, ".huffman");
 
 	openFile(fileOutputName, ptFileOutput, "wb");
+
 	/*ECRITURE DANS LE FICHIER CIBLE*/
+	/*------------------------------------------------------------*/
 
 	/* on écrit la taille du dictionnaire  */
 	fwrite(&tailleTab, sizeof(int), 1, *ptFileOutput);
@@ -321,6 +328,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		fwrite(&intTab[i], sizeof(int), 1, *ptFileOutput);
 		tailleFileOutput += 2;
 	}
+	/*------------------------------------------------------------*/
 
 	bufferCode = calloc(1, sizeof(char));
 
@@ -360,7 +368,6 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	/* si il reste des octets */
 	if (i != tailleCode) {
 		strcpy(charTemp, bufferCode);
-		currentChar = binaryToDecimal(charTemp);
 		if (strlen(charTemp) != 7) {
 			for (i = 0; i < 7; i++) {
 				if (charTemp[i] == '\0') {
@@ -368,7 +375,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 					charTemp[i] = '0';
 				}
 			}
-
+			currentChar = binaryToDecimal(charTemp);
 			fwrite(&currentChar, 1, 1, *ptFileOutput);
 		}
 	}
@@ -410,8 +417,11 @@ void decodeHuffmanTree(const char *bufferToDecode, noeud *noeudRacine,
 	}
 
 	printf("\n");
-	if (noeudRacine != ptRacine)
-		printf("Probleme de decodage avec les derniers caracteres\n");
+	/* si il reste des caractères dans le buffer*/
+	if (noeudRacine != ptRacine) {
+		fseek(*ptFileOutput, -1, SEEK_END);
+		putc('\n', *ptFileOutput);
+	}
 }
 
 void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
@@ -517,7 +527,7 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		exit(-1);
 	}
 
-	strcat(fileInputName,".decoded");
+	strcat(fileInputName, ".decoded");
 	*ptFileOutput = createFile(fileInputName);
 	closeFile(ptFileOutput);
 	openFile(fileInputName, ptFileOutput, "wb+");
@@ -526,10 +536,8 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	closeFile(ptFileOutput);
 
-	/*free(fileOutputName);
-	 fileOutputName = NULL;
 	free(decodedFileName);
-	decodedFileName = NULL;*/
+	decodedFileName = NULL;
 	free(bufferCode);
 	free(elemL);
 	elemL = NULL;
