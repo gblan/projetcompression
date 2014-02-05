@@ -326,7 +326,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 		fwrite(&charTab[i], sizeof(char), 1, *ptFileOutput);
 		tailleFileOutput++;
 		fwrite(&intTab[i], sizeof(int), 1, *ptFileOutput);
-		tailleFileOutput += 2;
+		tailleFileOutput += 4;
 	}
 	/*------------------------------------------------------------*/
 
@@ -355,7 +355,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	tailleCode = strlen(bufferCode);
 	int nboctet = tailleCode / 7;
-	tailleFileOutput = nboctet + 1;
+	tailleFileOutput += nboctet;
 	for (i = 0; i < nboctet; i++) {
 		strncpy(charTemp, bufferCode, 7);
 		currentChar = binaryToDecimal(charTemp);
@@ -367,6 +367,8 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	/* si il reste des octets */
 	if (i != tailleCode) {
+		tailleFileOutput++;
+
 		strcpy(charTemp, bufferCode);
 		if (strlen(charTemp) != 7) {
 			for (i = 0; i < 7; i++) {
@@ -382,7 +384,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	closeFile(ptFileOutput);
 
 	printf("Taux de compression : %.2llu %% \n",
-			((tailleFileOutput) * 100 / tailleFileInput));
+			100 -((tailleFileOutput) * 100 / tailleFileInput));
 	freeHuffmanTree(elemL->noeudIntermediaire);
 
 	free(elemL);
