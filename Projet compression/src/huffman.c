@@ -8,7 +8,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
-
 #include"general.h"
 
 /* structure de liste chainee */
@@ -331,7 +330,10 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	/*------------------------------------------------------------*/
 
 	bufferCode = calloc(1, sizeof(char));
-
+	if (bufferCode == NULL) {
+		printf("Erreur d'allocation bufferCode.\n");
+		exit(-1);
+	}
 	/*pointeur sur le fichier initial pour un nouveau parcours (creation du code)*/
 	fseek(*file, 0, SEEK_SET);
 
@@ -343,7 +345,7 @@ void huffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 				tailleCode = strlen(code[i]) + strlen(bufferCode) + 1;
 				bufferCode = realloc(bufferCode, tailleCode * sizeof(char));
 				if (bufferCode == NULL) {
-					printf("PROBLEM\n");
+					printf("Erreur reallocation bufferCode.\n");
 				}
 				strcat(bufferCode, code[i]);
 			}
@@ -445,6 +447,10 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 	start_time = clock();
 
 	bufferCode = calloc(1, sizeof(char));
+	if (bufferCode == NULL) {
+		printf("Erreur d'allocation bufferCode.\n");
+		exit(-1);
+	}
 
 	/* Lire la taille des structures au début du fichier */
 	fread(&tailleDico, sizeof(int), 1, *file);
@@ -452,12 +458,20 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	charTab = calloc(1, sizeof(char));
 	intTab = calloc(1, sizeof(int));
+	if ((intTab == NULL) || (charTab == NULL)) {
+		printf("Erreur d'allocation intTab ou  charTab.\n");
+		exit(-1);
+	}
 	i = 0;
 
 	/* Extraction du dictionnaire */
 	while (i < tailleDico) {
 		charTab = realloc(charTab, sizeof(char) * i + 1);
 		intTab = realloc(intTab, sizeof(int) * i + 1);
+		if ((intTab == NULL) || (charTab == NULL)) {
+			printf("Erreur reallocation intTab ou  charTab.\n");
+			exit(-1);
+		}
 
 		fread(&charTab[i], sizeof(char), 1, *file);
 		fread(&intTab[i], sizeof(int), 1, *file);
@@ -502,9 +516,17 @@ void decompressHuffman(FILE** file, FILE** ptFileOutput, char* fileInputName) {
 
 	/* on parcours le fichier compresse */
 	bufferCode = calloc(1, sizeof(char));
+	if(bufferCode == NULL){
+		printf("Erreur d'allocation bufferCode.\n");
+		exit(-1);
+	}
 	while (!feof(*file)) {
 		c = fgetc(*file);
 		bufferCode = realloc(bufferCode, 7 * (i + 2) * sizeof(char));
+		if(bufferCode == NULL){
+			printf("Erreur d'allocation bufferCode.\n");
+			exit(-1);
+		}
 		valueChar = c;
 		decimalToBinary(valueChar, currentOctet);
 		strcat(bufferCode, currentOctet);
