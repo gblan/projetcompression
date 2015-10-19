@@ -1,0 +1,1 @@
+compression de fichier texte & binaire
